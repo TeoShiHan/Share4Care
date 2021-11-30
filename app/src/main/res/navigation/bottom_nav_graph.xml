@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_nav_graph"
+    app:startDestination="@id/homeFragment2">
+
+    <fragment
+        android:id="@+id/homeFragment2"
+        android:name="com.example.share4care.ee.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment2_to_calendarFragment2"
+            app:destination="@id/calendarFragment2"
+            app:popUpTo="@id/homeFragment2" />
+        <action
+            android:id="@+id/action_homeFragment2_to_profileFragment3"
+            app:destination="@id/profileFragment3"
+            app:popUpTo="@id/homeFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment3"
+        android:name="com.example.share4care.ee.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment3_to_calendarFragment2"
+            app:destination="@id/calendarFragment2" />
+        <action
+            android:id="@+id/action_profileFragment3_to_homeFragment2"
+            app:destination="@id/homeFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarFragment2"
+        android:name="com.example.share4care.ee.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_calendarFragment2_to_profileFragment3"
+            app:destination="@id/profileFragment3" />
+        <action
+            android:id="@+id/action_calendarFragment2_to_homeFragment2"
+            app:destination="@id/homeFragment2" />
+    </fragment>
+</navigation>
