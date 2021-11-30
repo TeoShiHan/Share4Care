@@ -10,6 +10,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Share4Care">
         <activity
+            android:name=".ee.PostDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_post_detail"
+            android:theme="@style/Theme.Share4Care.NoActionBar" />
+        <activity
+            android:name=".ee.CreateEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ee.CreateActivity"
+            android:exported="false"
+            android:label="@string/title_activity_create"
+            android:theme="@style/Theme.Share4Care.NoActionBar" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
