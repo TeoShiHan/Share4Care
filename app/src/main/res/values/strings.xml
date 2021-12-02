@@ -29,4 +29,32 @@
     <string name="title_activity_post_detail">PostDetailActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+
+    <!-- Home Map Activity -->
+    <string name="title_activity_home">HomeActivity</string>
+
+    <!-- Categories in Dialog -->
+    <string-array name="type_array">
+        <item>Event</item>
+        <item>Service</item>
+        <item>Travel</item>
+    </string-array>
+
+    <!-- Text Headers in Forms -->
+    <string name="title">Title:</string>
+    <string name="host">Host/Organization Name:</string>
+    <string name="_category">Category: </string>
+    <string name="description">Description: </string>
+    <string name="date">Date: </string>
+    <string name="address">Address: </string>
+    <string name="contactNum">Contact Number: </string>
+    <string name="contactEmail">Contact Email: </string>
+    <string name="create">DONE</string>
+    <string-array name="event_category">
+        <item>Workshop</item>
+        <item>Charity</item>
+        <item>Seminar</item>
+    </string-array>
+
+
 </resources>
