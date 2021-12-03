@@ -29,6 +29,12 @@ import com.google.android.gms.maps.model.*
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    private lateinit var mMap: GoogleMap
+    private lateinit var binding: ActivityHomeBinding
+    private lateinit var activityType:String
+
+    var markersAll:MutableList<Marker> = mutableListOf()
+
     var listEvent:MutableList<Event> = mutableListOf(
         Event("Event Marker One","a","Event", "Event Marker One", "2020/10/10", "123 street", 39.150, 152.190, "0123456789", "blah@gmail.com"),
         Event("Event Marker Two","b","Event","Event Marker Two","2020/11/11","456 avenue",45.175, 200.150, "9876543210", "blah@hotmail.com")
@@ -51,21 +57,35 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
             val addedEvent=data?.getSerializableExtra(EVENT) as Event
             listEvent.add(addedEvent)
             val latlng=LatLng(addedEvent.latitude, addedEvent.longtitude)
-            mMap.addMarker(MarkerOptions()
+            val newMarker = mMap.addMarker(MarkerOptions()
+                        .position(latlng)
+                        .title(addedEvent.title)
+                        .snippet(addedEvent.description)
+                        .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_orange_48dp,R.drawable.baseline_event_20)))
+            markersAll.add(newMarker!!)
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))
+
+        }
+    }
+    var serviceData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data = result.data
+            val addedService=data?.getSerializableExtra(SERVICE) as Service
+            listService.add(addedService)
+            val latlng=LatLng(addedService.latitude, addedService.longtitude)
+            val newMarker = mMap.addMarker(MarkerOptions()
                 .position(latlng)
-                .title(addedEvent.title)
-                .snippet(addedEvent.description)
-                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_orange_48dp,R.drawable.baseline_event_20)))
+                .title(addedService.title)
+                .snippet(addedService.description)
+                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_blue_48dp,R.drawable.baseline_miscellaneous_services_20)))
+            markersAll.add(newMarker!!)
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))
 
         }
     }
 
 
-
-    private lateinit var mMap: GoogleMap
-    private lateinit var binding: ActivityHomeBinding
-    private lateinit var activityType:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +121,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
                         val intent = Intent(this, RegisterEventActivity::class.java)
                         eventData.launch(intent)
                     }
-
+                    "Service" -> {
+                        val intent = Intent(this, RegisterServiceActivity::class.java)
+                        serviceData.launch(intent)
+                    }
 
                 }
 
@@ -128,30 +151,33 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         for(s in listEvent){
             val latlng=LatLng(s.latitude, s.longtitude)
             boundsBuilder.include(latlng)
-            mMap.addMarker(MarkerOptions()
-                .position(latlng)
-                .title(s.title)
-                .snippet(s.description)
-                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_orange_48dp,R.drawable.baseline_event_20)))
+            val markerE = mMap.addMarker(MarkerOptions()
+                        .position(latlng)
+                        .title(s.title)
+                        .snippet(s.description)
+                        .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_orange_48dp,R.drawable.baseline_event_20)))
+            markersAll.add(markerE!!)
 
         }
         for(s in listService){
             val latlng=LatLng(s.latitude, s.longtitude)
             boundsBuilder.include(latlng)
-            mMap.addMarker(MarkerOptions()
-                .position(latlng)
-                .title(s.title)
-                .snippet(s.description)
-                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_blue_48dp,R.drawable.baseline_miscellaneous_services_20)))
+            val markerS = mMap.addMarker(MarkerOptions()
+                        .position(latlng)
+                        .title(s.title)
+                        .snippet(s.description)
+                        .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_blue_48dp,R.drawable.baseline_miscellaneous_services_20)))
+            markersAll.add(markerS!!)
         }
         for(s in listTravel){
             val latlng=LatLng(s.latitude, s.longtitude)
             boundsBuilder.include(latlng)
-            mMap.addMarker(MarkerOptions()
-                .position(latlng)
-                .title(s.title)
-                .snippet(s.description)
-                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_green_48dp,R.drawable.baseline_accessible_20)))
+            val markerT = mMap.addMarker(MarkerOptions()
+                        .position(latlng)
+                        .title(s.title)
+                        .snippet(s.description)
+                        .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_green_48dp,R.drawable.baseline_accessible_20)))
+            markersAll.add(markerT!!)
         }
 
         // Move the camera to an area covering most of the markers
