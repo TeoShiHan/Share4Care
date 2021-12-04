@@ -13,6 +13,10 @@ data class Travel(
     var longtitude:Double,
     var contactNumber:String,
     var contactEmail:String,
-    //var image: Bitmap
-):Serializable
+    var image: Bitmap?
+):Serializable {
+    constructor(title:String, host:String, category:String, description: String, address: String, latitude: Double, longtitude: Double,contactNumber: String, contactEmail: String ):
+            this(title, host, category, description, address, latitude, longtitude, contactNumber, contactEmail, null
+            )
+}
 

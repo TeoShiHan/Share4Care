@@ -24,15 +24,18 @@ import java.util.*
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import androidx.core.widget.doOnTextChanged
+import com.example.share4care.contentData.Travel
+import com.example.share4care.databinding.ActivityRegisterTravelBinding
 import java.io.FileDescriptor
 
 
-class RegisterServiceActivity : AppCompatActivity() {
+class RegisterTravelActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityRegisterServiceBinding
+    private lateinit var binding:ActivityRegisterTravelBinding
     private var imgUri: Uri? = null
     val regNum:Regex = Regex("^(01[(2-9|0)]\\d{7})\$|^(011\\d{8})\$")
     val regMail:Regex = Regex("^[a-zA-Z]\\w+@(\\S+)\$")
+
 
     var imageData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -46,10 +49,10 @@ class RegisterServiceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityRegisterServiceBinding.inflate(layoutInflater)
+        binding = ActivityRegisterTravelBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val items = resources.getStringArray(R.array.service_category)
+        val items = resources.getStringArray(R.array.travel_category)
         val adapter = ArrayAdapter(this, R.layout.list_item, items)
         binding.actualCategory.setAdapter(adapter)
 
@@ -58,7 +61,7 @@ class RegisterServiceActivity : AppCompatActivity() {
             intent.type="image/*"
             imageData.launch(intent)
         }
-        
+
         binding.actualContactNumber.doOnTextChanged { text, start, before, count ->
             if (!text.toString().matches(regNum)){
                 binding.contactHeader.error="Invalid Phone Number"
@@ -75,6 +78,7 @@ class RegisterServiceActivity : AppCompatActivity() {
             }
         }
 
+
         val doneBtn = binding.doneButton
         doneBtn.setOnClickListener() {
             val title = binding.actualTitle.text.toString()
@@ -90,7 +94,7 @@ class RegisterServiceActivity : AppCompatActivity() {
             val contactEmail = binding.actualContactEmail.text.toString()
             val image = uriToBitmap(imgUri!!)
 
-            val newService = Service(
+            val newTravel = Travel(
                 title,
                 host,
                 category,
@@ -103,7 +107,7 @@ class RegisterServiceActivity : AppCompatActivity() {
                 image
             )
             val data = Intent()
-            data.putExtra(HomeActivity.SERVICE, newService)
+            data.putExtra(HomeActivity.TRAVEL, newTravel)
             setResult(RESULT_OK, data)
             finish()
         }

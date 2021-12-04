@@ -49,17 +49,24 @@
     <string name="address">Address</string>
     <string name="contactNum">Contact Number</string>
     <string name="contactEmail">Contact Email</string>
+    <string name="image">Press Here To Upload An Image</string>
     <string name="create">DONE</string>
     <string-array name="event_category">
-        <item>Workshop</item>
         <item>Charity</item>
         <item>Seminar</item>
+        <item>Workshop</item>
     </string-array>
     <string-array name="service_category">
-        <item>Vocational Training</item>
+        <item>Assistive Services</item>
         <item>Education</item>
         <item>Employment</item>
-        <item>Assistive Services</item>
+        <item>Vocational Training</item>
+    </string-array>
+    <string-array name="travel_category">
+        <item>Accessible Bus Stop</item>
+        <item>Accessible Hotel Rooms</item>
+        <item>Accessible Parking Space</item>
+        <item>Accessible Public Toilet</item>
     </string-array>
 
 

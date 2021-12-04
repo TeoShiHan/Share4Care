@@ -84,6 +84,23 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
     }
+    var travelData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data = result.data
+            val addedTravel=data?.getSerializableExtra(TRAVEL) as Travel
+            listTravel.add(addedTravel)
+            val latlng=LatLng(addedTravel.latitude, addedTravel.longtitude)
+            val newMarker = mMap.addMarker(MarkerOptions()
+                .position(latlng)
+                .title(addedTravel.title)
+                .snippet(addedTravel.description)
+                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_green_48dp,R.drawable.baseline_accessible_20)))
+            markersAll.add(newMarker!!)
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))
+
+        }
+    }
 
 
 
@@ -125,13 +142,13 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
                         val intent = Intent(this, RegisterServiceActivity::class.java)
                         serviceData.launch(intent)
                     }
-
+                    "Travel" -> {
+                        val intent = Intent(this, RegisterTravelActivity::class.java)
+                        travelData.launch(intent)
+                    }
                 }
-
-
             }
         }
-
     }
 
     /**
