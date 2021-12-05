@@ -33,7 +33,9 @@
         <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/drawable/ic_profile.xml" value="0.2703125" />
         <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/drawable/round_corner.xml" value="0.2703125" />
         <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/drawable/round_corner_dark.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/drawable/sv_background.xml" value="0.2703125" />
         <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/layout/activity_create_event.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/layout/activity_home.xml" value="0.2789115646258503" />
         <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/layout/activity_main.xml" value="0.2565104166666667" />
         <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/layout/activity_post_detail.xml" value="0.1" />
         <entry key="..\:/Users/Asus/AndroidStudioProjects/Share4Care/app/src/main/res/layout/bottomsheet_fragment_posts.xml" value="0.25416666666666665" />
@@ -53,7 +55,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

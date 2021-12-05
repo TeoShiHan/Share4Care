@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.location.Address
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,13 +26,29 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.example.share4care.databinding.ActivityHomeBinding
 import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.MarkerOptions
+
+import com.google.android.gms.maps.model.LatLng
+
+import android.location.Geocoder
+import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.template.androidtemplate.ui.main.RecyclerAdapter
+import java.io.IOException
 
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var activityType:String
+    private lateinit var activityType: String
+    private lateinit var mapFragment: SupportMapFragment
+    private lateinit var recyclerAdapter: RecyclerAdapter
 
     var markersAll:MutableList<Marker> = mutableListOf()
 
@@ -111,9 +128,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         setContentView(binding.root)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
+        mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
 
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(this).inflate(R.layout.dialog_choose_type, null)
@@ -149,12 +165,71 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
         }
+
+        binding.svLocation.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // on below line we are getting the location name from search view.
+                val location: String = binding.svLocation.query.toString()
+
+                // below line is to create a list of address where we will store the list of all address.
+                var addressList: List<Address>? = null
+
+                // checking if the entered location is null or not.
+                if (location != null || location != "") {
+
+                    // on below line we are creating and initializing a geo coder.
+                    val geocoder:Geocoder = Geocoder(this@HomeActivity)
+                    try {
+                        // on below line we are getting location from the location name and adding that location to address list.
+                        addressList = geocoder.getFromLocationName(location, 2)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                    // on below line we are getting the location from our list a first position.
+                    val address: Address = addressList!!.get(0)
+
+                    // on below line we are creating a variable for our location where we will add our locations latitude and longitude.
+                    val latLng = LatLng(address.getLatitude(), address.getLongitude())
+
+                    // on below line we are adding marker to that position.
+                    mMap.addMarker(MarkerOptions().position(latLng).title(location))
+
+                    // below line is to animate camera to that position.
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10F))
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+
+        mapFragment.getMapAsync(this)
+
+        val navController = Navigation.findNavController(this, R.id.container)
+        NavigationUI.setupWithNavController(binding.bottomNavigationView,navController)
+
+        val bottomSheetParent = findViewById<ConstraintLayout>(R.id.bottom_sheet_parent)
+        val mBottomSheetBehaviour = BottomSheetBehavior.from(bottomSheetParent)
+        mBottomSheetBehaviour.apply {
+            peekHeight=100
+            this.state = BottomSheetBehavior.STATE_SETTLING
+            isFitToContents = false
+            halfExpandedRatio = 0.45f
+        }
+        binding.recyclerView.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.VERTICAL, false
+        )
+        recyclerAdapter = RecyclerAdapter()
+        binding.recyclerView.adapter = recyclerAdapter
     }
 
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * This is where we can add markers or lines, add listeners or mo ve the camera. In this case,
      * we just add a marker near Sydney, Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
