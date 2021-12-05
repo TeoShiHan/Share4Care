@@ -27,7 +27,7 @@ import com.example.share4care.databinding.ActivityHomeBinding
 import com.google.android.gms.maps.model.*
 
 
-class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
+class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHomeBinding
@@ -199,9 +199,12 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Move the camera to an area covering most of the markers
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 1000, 1000, 10))
-
+        mMap.setOnMarkerClickListener(this)
     }
 
+    override fun onMarkerClick(marker: Marker): Boolean {
+        TODO("Not yet implemented")
+    }
     private fun bitmapDescriptorFromVector(context: Context, @DrawableRes vectorBackgroundId:Int, @DrawableRes vectorDrawableResourceId: Int ): BitmapDescriptor? {
         val background = ContextCompat.getDrawable(context, vectorBackgroundId)
         background!!.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
@@ -228,6 +231,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         const val SERVICE = "com.example.share4care.SERVICE"
         const val TRAVEL = "com.example.share4care.TRAVEL"
     }
+
+
 
 
 }

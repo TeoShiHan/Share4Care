@@ -23,6 +23,7 @@ import java.io.IOException
 import java.util.*
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
+import android.view.View
 import androidx.core.widget.doOnTextChanged
 import java.io.FileDescriptor
 
@@ -54,6 +55,7 @@ class RegisterServiceActivity : AppCompatActivity() {
         binding.actualCategory.setAdapter(adapter)
 
         binding.imageHeader.setOnClickListener(){
+            binding.actualImage.visibility= View.VISIBLE
             val intent = Intent(Intent.ACTION_PICK)
             intent.type="image/*"
             imageData.launch(intent)
@@ -130,7 +132,7 @@ class RegisterServiceActivity : AppCompatActivity() {
         }
     }*/
 
-    fun uriToBitmap(imgUri: Uri): Bitmap? {
+    private fun uriToBitmap(imgUri: Uri): Bitmap? {
         val bitmap:Bitmap
         return try {
             bitmap = if(Build.VERSION.SDK_INT < 28) {
