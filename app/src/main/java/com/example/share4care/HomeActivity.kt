@@ -49,6 +49,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var activityType: String
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var recyclerAdapter: RecyclerAdapter
+    private lateinit var mBottomSheetBehaviour: BottomSheetBehavior<ConstraintLayout>
 
     var markersAll:MutableList<Marker> = mutableListOf()
 
@@ -176,7 +177,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
                 // checking if the entered location is null or not.
                 if (location != null || location != "") {
-
                     // on below line we are creating and initializing a geo coder.
                     val geocoder:Geocoder = Geocoder(this@HomeActivity)
                     try {
@@ -211,7 +211,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         NavigationUI.setupWithNavController(binding.bottomNavigationView,navController)
 
         val bottomSheetParent = findViewById<ConstraintLayout>(R.id.bottom_sheet_parent)
-        val mBottomSheetBehaviour = BottomSheetBehavior.from(bottomSheetParent)
+        mBottomSheetBehaviour = BottomSheetBehavior.from(bottomSheetParent)
         mBottomSheetBehaviour.apply {
             peekHeight=100
             this.state = BottomSheetBehavior.STATE_SETTLING
@@ -278,8 +278,11 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        TODO("Not yet implemented")
+        mBottomSheetBehaviour.state=BottomSheetBehavior.STATE_HALF_EXPANDED
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 10f))
+        return false
     }
+    
     private fun bitmapDescriptorFromVector(context: Context, @DrawableRes vectorBackgroundId:Int, @DrawableRes vectorDrawableResourceId: Int ): BitmapDescriptor? {
         val background = ContextCompat.getDrawable(context, vectorBackgroundId)
         background!!.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
@@ -306,8 +309,5 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         const val SERVICE = "com.example.share4care.SERVICE"
         const val TRAVEL = "com.example.share4care.TRAVEL"
     }
-
-
-
 
 }
