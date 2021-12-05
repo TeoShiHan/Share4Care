@@ -34,12 +34,10 @@ class MainActivity : AppCompatActivity() {
             isFitToContents = false
             halfExpandedRatio = 0.45f
         }
-
         binding.recyclerView.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.VERTICAL, false
         )
-
         recyclerAdapter = RecyclerAdapter()
         binding.recyclerView.adapter = recyclerAdapter
     }
