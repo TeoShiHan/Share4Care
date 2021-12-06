@@ -14,5 +14,9 @@ data class Event(
     var longtitude:Double,
     var contactNumber:String,
     var contactEmail:String,
-    //var image:Bitmap
-):Serializable
+    var image:Bitmap?
+):Serializable {
+    constructor(title:String, host:String, category:String, description: String, date:String, address: String, latitude: Double, longtitude: Double,contactNumber: String, contactEmail: String ):
+            this(title, host, category, description, date, address, latitude, longtitude, contactNumber, contactEmail, null
+            )
+}

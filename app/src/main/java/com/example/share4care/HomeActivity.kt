@@ -1,9 +1,11 @@
 package com.example.share4care
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Address
@@ -31,11 +33,14 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.LatLng
 
 import android.location.Geocoder
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.template.androidtemplate.ui.main.RecyclerAdapter
@@ -47,6 +52,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHomeBinding
     private lateinit var activityType: String
+    private val LOCATION_PERMISSION_REQUEST = 1
+    private lateinit var fusedLocationClient:FusedLocationProviderClient
+    private lateinit var locationRequest:LocationRequest
+    private lateinit var locationCallback: LocationCallback
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var recyclerAdapter: RecyclerAdapter
     private lateinit var mBottomSheetBehaviour: BottomSheetBehavior<ConstraintLayout>
@@ -119,7 +128,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         }
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -207,6 +215,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         mapFragment.getMapAsync(this)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         val navController = Navigation.findNavController(this, R.id.container)
         NavigationUI.setupWithNavController(binding.bottomNavigationView,navController)
 
@@ -282,7 +292,60 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 10f))
         return false
     }
-    
+
+    private fun getLocationAccess(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            mMap.isMyLocationEnabled = true
+            getLocationUpdates()
+            startLocationUpdates()
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==LOCATION_PERMISSION_REQUEST){
+            if (grantResults.contains(PackageManager.PERMISSION_GRANTED)){
+                getLocationAccess()
+            } else {
+                Toast.makeText(this,
+                    "User did not grant location access permission",
+                    Toast.LENGTH_LONG).show()
+                finish()
+            }
+        }
+    }
+
+    private fun startLocationUpdates(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST)
+        }
+    }
+
+    private fun getLocationUpdates(){
+        locationRequest = LocationRequest.create().apply {
+            interval = 1000
+            fastestInterval = 100
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+        locationCallback = object:LocationCallback(){
+            override fun onLocationResult(locationresult: LocationResult) {
+                val location = locationresult.lastLocation
+                if (location != null){
+                    val latLng = LatLng(location.latitude, location.longitude)
+                    mMap.addMarker(MarkerOptions().position(latLng))
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                }
+            }
+        }
+
+    }
+
     private fun bitmapDescriptorFromVector(context: Context, @DrawableRes vectorBackgroundId:Int, @DrawableRes vectorDrawableResourceId: Int ): BitmapDescriptor? {
         val background = ContextCompat.getDrawable(context, vectorBackgroundId)
         background!!.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
