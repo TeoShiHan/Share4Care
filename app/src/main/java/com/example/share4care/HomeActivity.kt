@@ -52,7 +52,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHomeBinding
     private lateinit var activityType: String
-    private val LOCATION_PERMISSION_REQUEST = 1
     private lateinit var fusedLocationClient:FusedLocationProviderClient
     private lateinit var locationRequest:LocationRequest
     private lateinit var locationCallback: LocationCallback
@@ -215,8 +214,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         mapFragment.getMapAsync(this)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
         val navController = Navigation.findNavController(this, R.id.container)
         NavigationUI.setupWithNavController(binding.bottomNavigationView,navController)
 
@@ -234,6 +231,9 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         )
         recyclerAdapter = RecyclerAdapter()
         binding.recyclerView.adapter = recyclerAdapter
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
     }
 
     /**
@@ -285,6 +285,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // Move the camera to an area covering most of the markers
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 1000, 1000, 10))
         mMap.setOnMarkerClickListener(this)
+
+        getLocationAccess()
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -294,19 +296,19 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun getLocationAccess(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.isMyLocationEnabled = true
             getLocationUpdates()
             startLocationUpdates()
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST)
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==LOCATION_PERMISSION_REQUEST){
+        if(requestCode==1){
             if (grantResults.contains(PackageManager.PERMISSION_GRANTED)){
                 getLocationAccess()
             } else {
@@ -319,11 +321,11 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun startLocationUpdates(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST)
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
     }
 
@@ -336,14 +338,11 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         locationCallback = object:LocationCallback(){
             override fun onLocationResult(locationresult: LocationResult) {
                 val location = locationresult.lastLocation
-                if (location != null){
-                    val latLng = LatLng(location.latitude, location.longitude)
-                    mMap.addMarker(MarkerOptions().position(latLng))
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-                }
+                val latLng = LatLng(location.latitude, location.longitude)
+                mMap.addMarker(MarkerOptions().position(latLng))
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
             }
         }
-
     }
 
     private fun bitmapDescriptorFromVector(context: Context, @DrawableRes vectorBackgroundId:Int, @DrawableRes vectorDrawableResourceId: Int ): BitmapDescriptor? {
