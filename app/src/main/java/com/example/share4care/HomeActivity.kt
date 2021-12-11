@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
 import android.location.Address
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -110,6 +111,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         }
     }
+
     var travelData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             // There are no request codes
@@ -138,6 +140,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
+
+        mapFragment.getMapAsync(this)
 
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(this).inflate(R.layout.dialog_choose_type, null)
@@ -212,8 +216,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         })
 
-        mapFragment.getMapAsync(this)
-
         val navController = Navigation.findNavController(this, R.id.container)
         NavigationUI.setupWithNavController(binding.bottomNavigationView,navController)
 
@@ -224,6 +226,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             this.state = BottomSheetBehavior.STATE_SETTLING
             isFitToContents = false
             halfExpandedRatio = 0.45f
+            expandedOffset = 200
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(
             this,
@@ -249,10 +252,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap = googleMap
 
         //adding markers for location under "Event"
-        val boundsBuilder= LatLngBounds.builder()
+        //val boundsBuilder= LatLngBounds.builder()
         for(s in listEvent){
             val latlng=LatLng(s.latitude, s.longtitude)
-            boundsBuilder.include(latlng)
+            //boundsBuilder.include(latlng)
             val markerE = mMap.addMarker(MarkerOptions()
                         .position(latlng)
                         .title(s.title)
@@ -263,7 +266,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         for(s in listService){
             val latlng=LatLng(s.latitude, s.longtitude)
-            boundsBuilder.include(latlng)
+            //boundsBuilder.include(latlng)
             val markerS = mMap.addMarker(MarkerOptions()
                         .position(latlng)
                         .title(s.title)
@@ -273,7 +276,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         for(s in listTravel){
             val latlng=LatLng(s.latitude, s.longtitude)
-            boundsBuilder.include(latlng)
+            //boundsBuilder.include(latlng)
             val markerT = mMap.addMarker(MarkerOptions()
                         .position(latlng)
                         .title(s.title)
@@ -283,8 +286,12 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         // Move the camera to an area covering most of the markers
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 1000, 1000, 10))
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 1000, 1000, 10))
         mMap.setOnMarkerClickListener(this)
+
+        mMap.setOnMapClickListener {
+            mBottomSheetBehaviour.state=BottomSheetBehavior.STATE_COLLAPSED
+        }
 
         getLocationAccess()
     }
@@ -292,7 +299,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onMarkerClick(marker: Marker): Boolean {
         mBottomSheetBehaviour.state=BottomSheetBehavior.STATE_HALF_EXPANDED
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 10f))
-        return false
+        return true
     }
 
     private fun getLocationAccess(){
@@ -331,9 +338,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun getLocationUpdates(){
         locationRequest = LocationRequest.create().apply {
-            interval = 1000
-            fastestInterval = 100
+            interval = 30000
+            fastestInterval = 20000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            smallestDisplacement = 1.0F
         }
         locationCallback = object:LocationCallback(){
             override fun onLocationResult(locationresult: LocationResult) {

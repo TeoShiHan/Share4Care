@@ -24,24 +24,24 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/sv_background"
+        android:elevation="5dp"
         android:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/map"
-        android:elevation="5dp"
-        android:background="@drawable/sv_background"
         app:queryHint="Search" />
 
     <fragment
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/bottom_nav_graph"
         android:id="@+id/container"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="408dp"
         android:layout_height="0dp"
+        app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@+id/coordinator"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:navGraph="@navigation/bottom_nav_graph" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addButton"
@@ -56,32 +56,31 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        tools:context=".MainActivity"
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_view"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottom_sheet_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/round_corner"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            >
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_baseline_remove_24"
-                android:scaleType="centerCrop"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_remove_24" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
@@ -89,6 +88,7 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:background="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/colorPrimary"
+        android:background="@color/app_orange"
         app:contentInsetEnd="0dp"
         app:contentInsetStart="0dp"
         app:itemBackground="@color/colorPrimary"
