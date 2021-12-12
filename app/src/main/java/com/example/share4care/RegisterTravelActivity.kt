@@ -11,9 +11,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.share4care.contentData.Event
@@ -24,9 +21,15 @@ import java.util.*
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import android.view.View
+import android.webkit.MimeTypeMap
+import android.widget.*
 import androidx.core.widget.doOnTextChanged
+import com.bumptech.glide.Glide
 import com.example.share4care.contentData.Travel
 import com.example.share4care.databinding.ActivityRegisterTravelBinding
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import java.io.FileDescriptor
 
 
@@ -34,6 +37,13 @@ class RegisterTravelActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityRegisterTravelBinding
     private var imgUri: Uri? = null
+    private var image: String = ""
+    private lateinit var imgView: ImageView
+
+    val database = Firebase.database
+    val myDatabaseRef = database.getReference("Travels")
+    var myStorageRef = FirebaseStorage.getInstance().getReference("images")
+
     val regNum:Regex = Regex("^(01[(2-9|0)]\\d{7})\$|^(011\\d{8})\$")
     val regMail:Regex = Regex("^[a-zA-Z]\\w+@(\\S+)\$")
 
@@ -42,7 +52,7 @@ class RegisterTravelActivity : AppCompatActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             imgUri  = data?.data
-            binding.actualImage.setImageURI(data?.data)
+            Glide.with(imgView.context).load(imgUri).into(imgView)
         }
     }
 
@@ -94,7 +104,21 @@ class RegisterTravelActivity : AppCompatActivity() {
             val foundLongtitude = address.longitude
             val contactNumber = binding.actualContactNumber.text.toString()
             val contactEmail = binding.actualContactEmail.text.toString()
-            val image = uriToBitmap(imgUri!!)
+            //val image = uriToBitmap(imgUri!!)
+
+            if(imgUri!=null){
+                val fileRef = myStorageRef.child(title+host+category+"."+getFileExtension(imgUri!!))
+
+                fileRef.putFile(imgUri!!)
+                    .addOnSuccessListener {
+                        imgView.setImageURI(null)
+                        Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
+                        image = fileRef.downloadUrl.toString()
+                    }
+                    .addOnFailureListener{
+                        Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_LONG).show()
+                    }
+            }
 
             val newTravel = Travel(
                 title,
@@ -108,11 +132,29 @@ class RegisterTravelActivity : AppCompatActivity() {
                 contactEmail,
                 image
             )
+
+            val key = title+host+category
+
+            myDatabaseRef.child(key).setValue(newTravel)
+                .addOnSuccessListener {
+                    Toast.makeText(applicationContext, "Event added and awaiting for verification", Toast.LENGTH_LONG).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(applicationContext, it.message.toString(), Toast.LENGTH_LONG)
+                        .show()
+                }
+
             val data = Intent()
             data.putExtra(HomeActivity.TRAVEL, newTravel)
             setResult(RESULT_OK, data)
             finish()
         }
+    }
+
+    private fun getFileExtension(uri: Uri): String? {
+        val mime = MimeTypeMap.getSingleton()
+        val cr = contentResolver
+        return mime.getExtensionFromMimeType(cr.getType(uri))
     }
 
     /*fun uriToBitmap(selectedFileUri: Uri) {

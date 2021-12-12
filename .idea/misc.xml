@@ -17,7 +17,7 @@
         <entry key="..\:/Share4Care/app/src/main/res/layout/activity_register_event.xml" value="0.4839650145772595" />
         <entry key="..\:/Share4Care/app/src/main/res/layout/activity_register_event_acitivity.xml" value="0.13385416666666666" />
         <entry key="..\:/Share4Care/app/src/main/res/layout/activity_register_service.xml" value="0.2978723404255319" />
-        <entry key="..\:/Share4Care/app/src/main/res/layout/activity_register_travel.xml" value="0.13385416666666666" />
+        <entry key="..\:/Share4Care/app/src/main/res/layout/activity_register_travel.xml" value="0.536" />
         <entry key="..\:/Share4Care/app/src/main/res/layout/card_layout.xml" value="0.13385416666666666" />
         <entry key="..\:/Share4Care/app/src/main/res/layout/dialog_choose_type.xml" value="0.13385416666666666" />
         <entry key="..\:/Share4Care/app/src/main/res/layout/fragment_calendar.xml" value="0.13385416666666666" />
@@ -62,5 +62,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.4839650145772595" />
+      </ProjectState>
+    </option>
   </component>
 </project>

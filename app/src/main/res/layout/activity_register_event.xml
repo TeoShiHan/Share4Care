@@ -355,15 +355,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+            <Button
                 android:id="@+id/imageHeader"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
+                android:layout_weight="1"
                 android:text="@string/image"
-                android:textSize="16sp"/>
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:backgroundTint="@color/colorSecondaryText" />
 
             <ImageView
                 android:id="@+id/actualImage"
@@ -383,7 +383,8 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/create"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:backgroundTint="@color/colorSecondaryText" />
     </LinearLayout>
 
 </ScrollView>
