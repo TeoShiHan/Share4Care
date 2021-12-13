@@ -12,26 +12,40 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.DatePicker
-import android.widget.EditText
+import android.webkit.MimeTypeMap
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.setContentView
+import com.bumptech.glide.Glide
 import com.example.share4care.contentData.Event
 import com.example.share4care.databinding.ActivityRegisterEventBinding
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import java.io.IOException
 import java.util.*
 
-class RegisterEventActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+class RegisterEventActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityRegisterEventBinding
+    private var image: String = ""
     private var imgUri: Uri? = null
+    private lateinit var imgView: ImageView
+    private lateinit var displayDate: EditText
+
+    val database = Firebase.database
+    val myDatabaseRef = database.getReference("Events")
+    var myStorageRef = FirebaseStorage.getInstance().getReference("images")
+
     val regNum:Regex = Regex("^(01[(2-9|0)]\\d{7})\$|^(011\\d{8})\$")
     val regMail:Regex = Regex("^[a-zA-Z]\\w+@(\\S+)\$")
 
@@ -39,16 +53,17 @@ class RegisterEventActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLis
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             imgUri  = data?.data
-            binding.actualImage.setImageURI(data?.data)
+            Glide.with(imgView.context).load(imgUri).into(imgView)
         }
     }
-    private lateinit var displayDate: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityRegisterEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        imgView = findViewById(R.id.actualImage)
 
         val items = resources.getStringArray(R.array.event_category)
         val adapter = ArrayAdapter(this, R.layout.list_item, items)
@@ -95,10 +110,35 @@ class RegisterEventActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLis
             val foundLongtitude = address.longitude
             val contactNumber = binding.actualContactNumber.text.toString()
             val contactEmail = binding.actualContactEmail.text.toString()
-            val image = uriToBitmap(imgUri!!)
+            //val image = uriToBitmap(imgUri!!)
 
+            if(imgUri!=null){
+                val fileRef = myStorageRef.child(title+host+date+"."+getFileExtension(imgUri!!))
 
-            val newEvent = Event(title, host, category, description, date, originalAddress, foundLatitude, foundLongtitude, contactNumber, contactEmail)
+                fileRef.putFile(imgUri!!)
+                    .addOnSuccessListener {
+                        imgView.setImageURI(null)
+                        Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
+                        image = fileRef.downloadUrl.toString()
+                    }
+                    .addOnFailureListener{
+                        Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_LONG).show()
+                    }
+            }
+
+            val newEvent = Event(title, host, category, description, date, originalAddress, foundLatitude, foundLongtitude, contactNumber, contactEmail, image)
+
+            val key = title+host+date
+
+            myDatabaseRef.child(key).setValue(newEvent)
+                .addOnSuccessListener {
+                    Toast.makeText(applicationContext, "Event added and awaiting for verification", Toast.LENGTH_LONG).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(applicationContext, it.message.toString(), Toast.LENGTH_LONG)
+                        .show()
+                }
+
             val data = Intent()
             data.putExtra(HomeActivity.EVENT, newEvent)
             setResult(RESULT_OK, data)
@@ -107,7 +147,7 @@ class RegisterEventActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLis
 
     }
 
-    private fun showDatePickerDialog(){
+    /*private fun showDatePickerDialog(){
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
@@ -115,7 +155,7 @@ class RegisterEventActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLis
 
         val datePicker = DatePickerDialog(this, this, year, month, day )
         datePicker.show()
-    }
+    }*/
 
     private fun materialDatePicker(){
         // Create the date picker builder and set the title
@@ -130,17 +170,23 @@ class RegisterEventActivity : AppCompatActivity(), DatePickerDialog.OnDateSetLis
             // Create calendar object and set the date to be that returned from selection
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             calendar.time = Date(it)
-            val selectDate = "${calendar.get(Calendar.DAY_OF_MONTH)}/" +
-                    "${calendar.get(Calendar.MONTH) + 1}/${calendar.get(Calendar.YEAR)}"
+            val selectDate = "${calendar.get(Calendar.DAY_OF_MONTH)}-" +
+                    "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
             displayDate.setText(selectDate)
         }
         datePicker.show(supportFragmentManager, datePicker.toString())
     }
 
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+    /*override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         var actualMonth = month+1
         var selectDate:String = "$dayOfMonth/$actualMonth/$year"
         displayDate.setText(selectDate)
+    }*/
+
+    private fun getFileExtension(uri: Uri): String? {
+        val mime = MimeTypeMap.getSingleton()
+        val cr = contentResolver
+        return mime.getExtensionFromMimeType(cr.getType(uri))
     }
 
     private fun uriToBitmap(imgUri: Uri): Bitmap? {

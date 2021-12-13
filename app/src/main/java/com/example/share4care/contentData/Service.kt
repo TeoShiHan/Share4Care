@@ -13,10 +13,11 @@ data class Service(
     var longtitude:Double,
     var contactNumber:String,
     var contactEmail:String,
-    var image: Bitmap?
+    var image: String,
+    var status:Int
 ):Serializable {
-    constructor(title:String, host:String, category:String, description: String, address: String, latitude: Double, longtitude: Double,contactNumber: String, contactEmail: String ):
-            this(title, host, category, description, address, latitude, longtitude, contactNumber, contactEmail, null
-            )
+    constructor(title:String, host:String, category:String, description: String, address: String,
+                latitude: Double, longtitude: Double,contactNumber: String, contactEmail: String, imgUrl:String ): this
+        (title, host, category, description, address, latitude, longtitude, contactNumber, contactEmail, imgUrl, 0)
     }
 

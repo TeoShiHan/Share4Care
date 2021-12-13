@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
 import android.location.Address
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -43,6 +44,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.template.androidtemplate.ui.main.RecyclerAdapter
 import java.io.IOException
 
@@ -50,6 +54,7 @@ import java.io.IOException
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var mMap: GoogleMap
+    private lateinit var addedEvent:Event
     private lateinit var binding: ActivityHomeBinding
     private lateinit var activityType: String
     private lateinit var fusedLocationClient:FusedLocationProviderClient
@@ -59,28 +64,32 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var recyclerAdapter: RecyclerAdapter
     private lateinit var mBottomSheetBehaviour: BottomSheetBehavior<ConstraintLayout>
 
+    val database = Firebase.database
+    val myDatabaseRef = database.getReference("Events")
+    val myStorageRef = FirebaseStorage.getInstance().getReference("images")
+
     var markersAll:MutableList<Marker> = mutableListOf()
 
     var listEvent:MutableList<Event> = mutableListOf(
-        Event("Event Marker One","a","Event", "Event Marker One", "2020/10/10", "123 street", 39.150, 152.190, "0123456789", "blah@gmail.com"),
-        Event("Event Marker Two","b","Event","Event Marker Two","2020/11/11","456 avenue",45.175, 200.150, "9876543210", "blah@hotmail.com")
+        Event("Event Marker One","a","Event", "Event Marker One", "2020/10/10", "123 street", 39.150, 152.190, "0123456789", "blah@gmail.com", ""),
+        Event("Event Marker Two","b","Event","Event Marker Two","2020/11/11","456 avenue",45.175, 200.150, "9876543210", "blah@hotmail.com", "")
     )
 
     var listService:MutableList<Service> = mutableListOf(
-        Service("Service Marker One","c","Event", "Handsign Interpreter", "123 street", 50.150, 185.190, "0123456789", "blah@email.com"),
-        Service("Service Marker Two","d","Event", "Transport", "123 street", 75.150, 250.190, "0123456789", "blah@email.com")
+        Service("Service Marker One","c","Event", "Handsign Interpreter", "123 street", 50.150, 185.190, "0123456789", "blah@email.com", ""),
+        Service("Service Marker Two","d","Event", "Transport", "123 street", 75.150, 250.190, "0123456789", "blah@email.com", "")
     )
 
     var listTravel:MutableList<Travel> = mutableListOf(
-        Travel("Travel Marker One","c","Event", "Accessible Bus Stop", "123 street", 55.150, 200.190,"0123456789", ".@gmail.com"),
-        Travel("Travel Marker Two","d","Event", "Accessible Public Toilet", "123 street", 80.150, 275.190, "9876543210", "$$$@email.com")
+        Travel("Travel Marker One","c","Event", "Accessible Bus Stop", "123 street", 55.150, 200.190,"0123456789", ".@gmail.com", ""),
+        Travel("Travel Marker Two","d","Event", "Accessible Public Toilet", "123 street", 80.150, 275.190, "9876543210", "$$$@email.com", "")
     )
 
     var eventData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             // There are no request codes
             val data = result.data
-            val addedEvent=data?.getSerializableExtra(EVENT) as Event
+            addedEvent=data?.getSerializableExtra(EVENT) as Event
             listEvent.add(addedEvent)
             val latlng=LatLng(addedEvent.latitude, addedEvent.longtitude)
             val newMarker = mMap.addMarker(MarkerOptions()
@@ -90,7 +99,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_orange_48dp,R.drawable.baseline_event_20)))
             markersAll.add(newMarker!!)
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))
-
         }
     }
     var serviceData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -110,6 +118,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         }
     }
+
     var travelData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             // There are no request codes
@@ -139,6 +148,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
 
+        mapFragment.getMapAsync(this)
+
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(this).inflate(R.layout.dialog_choose_type, null)
             val dialog= AlertDialog.Builder(this)
@@ -161,14 +172,17 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                     "Event" -> {
                         val intent = Intent(this, RegisterEventActivity::class.java)
                         eventData.launch(intent)
+                        dialog.dismiss()
                     }
                     "Service" -> {
                         val intent = Intent(this, RegisterServiceActivity::class.java)
                         serviceData.launch(intent)
+                        dialog.dismiss()
                     }
                     "Travel" -> {
                         val intent = Intent(this, RegisterTravelActivity::class.java)
                         travelData.launch(intent)
+                        dialog.dismiss()
                     }
                 }
             }
@@ -212,8 +226,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         })
 
-        mapFragment.getMapAsync(this)
-
         val navController = Navigation.findNavController(this, R.id.container)
         NavigationUI.setupWithNavController(binding.bottomNavigationView,navController)
 
@@ -224,6 +236,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             this.state = BottomSheetBehavior.STATE_SETTLING
             isFitToContents = false
             halfExpandedRatio = 0.45f
+            expandedOffset = 200
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(
             this,
@@ -249,10 +262,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap = googleMap
 
         //adding markers for location under "Event"
-        val boundsBuilder= LatLngBounds.builder()
+        //val boundsBuilder= LatLngBounds.builder()
         for(s in listEvent){
             val latlng=LatLng(s.latitude, s.longtitude)
-            boundsBuilder.include(latlng)
+            //boundsBuilder.include(latlng)
             val markerE = mMap.addMarker(MarkerOptions()
                         .position(latlng)
                         .title(s.title)
@@ -263,7 +276,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         for(s in listService){
             val latlng=LatLng(s.latitude, s.longtitude)
-            boundsBuilder.include(latlng)
+            //boundsBuilder.include(latlng)
             val markerS = mMap.addMarker(MarkerOptions()
                         .position(latlng)
                         .title(s.title)
@@ -273,7 +286,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         for(s in listTravel){
             val latlng=LatLng(s.latitude, s.longtitude)
-            boundsBuilder.include(latlng)
+            //boundsBuilder.include(latlng)
             val markerT = mMap.addMarker(MarkerOptions()
                         .position(latlng)
                         .title(s.title)
@@ -283,8 +296,12 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         // Move the camera to an area covering most of the markers
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 1000, 1000, 10))
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 1000, 1000, 10))
         mMap.setOnMarkerClickListener(this)
+
+        mMap.setOnMapClickListener {
+            mBottomSheetBehaviour.state=BottomSheetBehavior.STATE_COLLAPSED
+        }
 
         getLocationAccess()
     }
@@ -292,7 +309,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onMarkerClick(marker: Marker): Boolean {
         mBottomSheetBehaviour.state=BottomSheetBehavior.STATE_HALF_EXPANDED
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 10f))
-        return false
+        return true
     }
 
     private fun getLocationAccess(){
@@ -331,9 +348,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun getLocationUpdates(){
         locationRequest = LocationRequest.create().apply {
-            interval = 1000
-            fastestInterval = 100
+            interval = 30000
+            fastestInterval = 20000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            smallestDisplacement = 1.0F
         }
         locationCallback = object:LocationCallback(){
             override fun onLocationResult(locationresult: LocationResult) {

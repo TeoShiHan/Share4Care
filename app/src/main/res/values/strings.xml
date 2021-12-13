@@ -49,7 +49,7 @@
     <string name="address">Address</string>
     <string name="contactNum">Contact Number</string>
     <string name="contactEmail">Contact Email</string>
-    <string name="image">Press Here To Upload An Image</string>
+    <string name="image">Upload Image</string>
     <string name="create">DONE</string>
     <string-array name="event_category">
         <item>Charity</item>
