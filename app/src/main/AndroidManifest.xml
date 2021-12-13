@@ -22,6 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Share4Care">
         <activity
+            android:name=".chooili.CreateESTActivity"
+            android:exported="false" />
+        <activity
             android:name=".chooili.AdminHome"
             android:exported="false" />
         <activity
