@@ -44,6 +44,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -65,25 +68,18 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mBottomSheetBehaviour: BottomSheetBehavior<ConstraintLayout>
 
     val database = Firebase.database
-    val myDatabaseRef = database.getReference("Events")
+    val myEventRef = database.getReference("Events")
+    val myServiceRef= database.getReference("Services")
+    val myTravelRef = database.getReference("Travels")
     val myStorageRef = FirebaseStorage.getInstance().getReference("images")
 
-    var markersAll:MutableList<Marker> = mutableListOf()
+    var markersAll = mutableListOf<Marker>()
 
-    var listEvent:MutableList<Event> = mutableListOf(
-        Event("Event Marker One","a","Event", "Event Marker One", "2020/10/10", "123 street", 39.150, 152.190, "0123456789", "blah@gmail.com", ""),
-        Event("Event Marker Two","b","Event","Event Marker Two","2020/11/11","456 avenue",45.175, 200.150, "9876543210", "blah@hotmail.com", "")
-    )
+    private lateinit var listEvent: MutableList<Event>
 
-    var listService:MutableList<Service> = mutableListOf(
-        Service("Service Marker One","c","Event", "Handsign Interpreter", "123 street", 50.150, 185.190, "0123456789", "blah@email.com", ""),
-        Service("Service Marker Two","d","Event", "Transport", "123 street", 75.150, 250.190, "0123456789", "blah@email.com", "")
-    )
+    var listService = mutableListOf<Service>()
 
-    var listTravel:MutableList<Travel> = mutableListOf(
-        Travel("Travel Marker One","c","Event", "Accessible Bus Stop", "123 street", 55.150, 200.190,"0123456789", ".@gmail.com", ""),
-        Travel("Travel Marker Two","d","Event", "Accessible Public Toilet", "123 street", 80.150, 275.190, "9876543210", "$$$@email.com", "")
-    )
+    var listTravel = mutableListOf<Travel>()
 
     var eventData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -101,6 +97,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))
         }
     }
+
     var serviceData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             // There are no request codes
@@ -137,7 +134,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -149,6 +145,24 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             .findFragmentById(R.id.map) as SupportMapFragment
 
         mapFragment.getMapAsync(this)
+
+        loadEvent(object:EventCallback{
+            override fun onEventBack(s: MutableList<Event>) {
+                listEvent = s
+            }
+        })
+
+        loadService(object:ServiceCallback{
+            override fun onServiceBack(s: MutableList<Service>) {
+                listService = s
+            }
+        })
+
+        loadTravel(object:TravelCallback{
+            override fun onTravelBack(s: MutableList<Travel>) {
+                listTravel = s
+            }
+        })
 
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(this).inflate(R.layout.dialog_choose_type, null)
@@ -246,9 +260,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         binding.recyclerView.adapter = recyclerAdapter
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
     }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -272,7 +284,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                         .snippet(s.description)
                         .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pin_filled_orange_48dp,R.drawable.baseline_event_20)))
             markersAll.add(markerE!!)
-
         }
         for(s in listService){
             val latlng=LatLng(s.latitude, s.longtitude)
@@ -308,7 +319,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     override fun onMarkerClick(marker: Marker): Boolean {
         mBottomSheetBehaviour.state=BottomSheetBehavior.STATE_HALF_EXPANDED
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 10f))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 15f))
         return true
     }
 
@@ -382,6 +393,109 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         background.draw(canvas)
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    private fun loadEvent(callback: EventCallback){
+        val ref = myEventRef
+        val refListener = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                val list = mutableListOf<Event>()
+                if (p0.exists()) {
+                    for (c in p0.children) {
+                        val title =  c.child("title").value.toString()
+                        val host =  c.child("host").value.toString()
+                        val category =  c.child("category").value.toString()
+                        val description = c.child("description").value.toString()
+                        val date = c.child("date").value.toString()
+                        val address = c.child("address").value.toString()
+                        val latitude = c.child("latitude").value as Double
+                        val longtitude = c.child("longtitude").value as Double
+                        val contactNumber = c.child("contactNumber").value.toString()
+                        val contactEmail = c.child("contactEmail").value.toString()
+                        val image = c.child("image").value.toString()
+                        val status = (c.child("status").value as Long).toInt()
+
+                       list.add(Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status))
+                    }
+                    callback.onEventBack(list)
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+            }
+        }
+        ref.addValueEventListener(refListener)
+    }
+
+    private fun loadService(callback: ServiceCallback){
+        val ref = myServiceRef
+        val refListener = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                val list = mutableListOf<Service>()
+                if (p0.exists()) {
+                    for (c in p0.children) {
+                        val title =  c.child("title").value.toString()
+                        val host =  c.child("host").value.toString()
+                        val category =  c.child("category").value.toString()
+                        val description = c.child("description").value.toString()
+                        val address = c.child("address").value.toString()
+                        val latitude = c.child("latitude").value as Double
+                        val longtitude = c.child("longtitude").value as Double
+                        val contactNumber = c.child("contactNumber").value.toString()
+                        val contactEmail = c.child("contactEmail").value.toString()
+                        val image = c.child("image").value.toString()
+                        val status = (c.child("status").value as Long).toInt()
+
+                        list.add(Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status))
+                    }
+                    callback.onServiceBack(list)
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+            }
+        }
+        ref.addValueEventListener(refListener)
+    }
+
+    private fun loadTravel(callback: TravelCallback){
+        val ref = myTravelRef
+        val refListener = object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                val list = mutableListOf<Travel>()
+                if (p0.exists()) {
+                    for (c in p0.children) {
+                        val title =  c.child("title").value.toString()
+                        val host =  c.child("host").value.toString()
+                        val category =  c.child("category").value.toString()
+                        val description = c.child("description").value.toString()
+                        val address = c.child("address").value.toString()
+                        val latitude = c.child("latitude").value as Double
+                        val longtitude = c.child("longtitude").value as Double
+                        val contactNumber = c.child("contactNumber").value.toString()
+                        val contactEmail = c.child("contactEmail").value.toString()
+                        val image = c.child("image").value.toString()
+                        val status = (c.child("status").value as Long).toInt()
+
+                        list.add(Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status))
+                    }
+                    callback.onTravelBack(list)
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+            }
+        }
+        ref.addValueEventListener(refListener)
+    }
+
+    interface EventCallback{
+        fun onEventBack(s:MutableList<Event>)
+    }
+
+    interface ServiceCallback{
+        fun onServiceBack(s:MutableList<Service>)
+    }
+
+    interface TravelCallback{
+        fun onTravelBack(s:MutableList<Travel>)
     }
 
     companion object{

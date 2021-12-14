@@ -33,7 +33,7 @@ import java.io.FileDescriptor
 class RegisterServiceActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityRegisterServiceBinding
-    private var image: String = ""
+    var image: String = ""
     private var imgUri: Uri? = null
     private lateinit var imgView: ImageView
 
@@ -41,7 +41,7 @@ class RegisterServiceActivity : AppCompatActivity() {
     val myDatabaseRef = database.getReference("Services")
     var myStorageRef = FirebaseStorage.getInstance().getReference("images")
 
-    val regNum:Regex = Regex("^(01[(2-9|0)]\\d{7})\$|^(011\\d{8})\$")
+    val regNum:Regex = Regex("^(01[(2-9|0)]\\d{7})\$|^(011\\d{8})\$|^(0\\d\\d{7})\$|^(0\\d{2}\\d{6})\$|^(0\\d\\d{8})\$") //
     val regMail:Regex = Regex("^[a-zA-Z]\\w+@(\\S+)\$")
 
     var imageData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -58,6 +58,8 @@ class RegisterServiceActivity : AppCompatActivity() {
 
         binding = ActivityRegisterServiceBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        imgView = findViewById(R.id.actualImage)
 
         val items = resources.getStringArray(R.array.service_category)
         val adapter = ArrayAdapter(this, R.layout.list_item, items)
@@ -101,48 +103,68 @@ class RegisterServiceActivity : AppCompatActivity() {
             val contactEmail = binding.actualContactEmail.text.toString()
             //val image = uriToBitmap(imgUri!!)
 
+            /*if(imgUri!=null){
+                val fileRef = myStorageRef.child(title+host+category+"."+getFileExtension(imgUri!!))
+
+                fileRef.putFile(imgUri!!)
+                    .addOnSuccessListener { snapshot ->
+                        val result = snapshot.metadata!!.reference!!.downloadUrl
+                        result.addOnSuccessListener {
+                            Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
+                            image = it.toString()
+                        }
+                    }
+                    .addOnFailureListener{
+                        Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_LONG).show()
+                    }
+            }*/
+
             if(imgUri!=null){
                 val fileRef = myStorageRef.child(title+host+category+"."+getFileExtension(imgUri!!))
 
                 fileRef.putFile(imgUri!!)
-                    .addOnSuccessListener {
-                        imgView.setImageURI(null)
-                        Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
-                        image = fileRef.downloadUrl.toString()
+                    .addOnSuccessListener { snapshot ->
+                        val result = snapshot.storage.downloadUrl
+                        result.addOnSuccessListener {
+                            Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
+                            image = it.toString()
+
+                            val newService = Service(
+                                title,
+                                host,
+                                category,
+                                description,
+                                originalAddress,
+                                foundLatitude,
+                                foundLongtitude,
+                                contactNumber,
+                                contactEmail,
+                                image
+                            )
+
+                            val key = title
+
+                            myDatabaseRef.child(key).setValue(newService)
+                                .addOnSuccessListener {
+                                    Toast.makeText(applicationContext, "Event added and awaiting for verification", Toast.LENGTH_LONG).show()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(applicationContext, it.message.toString(), Toast.LENGTH_LONG)
+                                        .show()
+                                }
+
+                            val data = Intent()
+                            data.putExtra(HomeActivity.SERVICE, newService)
+                            setResult(RESULT_OK, data)
+                            finish()
+                        }
                     }
                     .addOnFailureListener{
                         Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_LONG).show()
                     }
             }
 
-            val newService = Service(
-                title,
-                host,
-                category,
-                description,
-                originalAddress,
-                foundLatitude,
-                foundLongtitude,
-                contactNumber,
-                contactEmail,
-                image
-            )
 
-            val key = title+host+category
-
-            myDatabaseRef.child(key).setValue(newService)
-                .addOnSuccessListener {
-                    Toast.makeText(applicationContext, "Event added and awaiting for verification", Toast.LENGTH_LONG).show()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(applicationContext, it.message.toString(), Toast.LENGTH_LONG)
-                        .show()
-                }
-
-            val data = Intent()
-            data.putExtra(HomeActivity.SERVICE, newService)
-            setResult(RESULT_OK, data)
-            finish()
         }
     }
 //"now < 1641830400000"
