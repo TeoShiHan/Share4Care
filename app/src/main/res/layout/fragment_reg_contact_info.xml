@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="0dp"
+    tools:context=".loginAndRegisterForm.LoginActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/reg_contact_phone_container"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="30dp"
+        android:hint="@string/mobile_phone"
+        app:boxStrokeColor="@color/app_orange"
+        app:hintTextColor="@color/app_orange"
+        app:layout_constraintEnd_toEndOf="@+id/reg_contact_email_container"
+        app:layout_constraintStart_toStartOf="@+id/reg_contact_email_container"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/phone_icon_"
+        tools:ignore="MissingConstraints">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/reg_contact_phone_input"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_contact_email_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="30dp"
+            android:hint="@string/contactEmail"
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reg_contact_phone_container"
+            app:startIconDrawable="@drawable/email_icon"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_contact_email_input"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/reg_contact_to_next_page_btn"
+        android:layout_width="120dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_gradient"
+        android:text="@string/next"
+        app:layout_constraintEnd_toEndOf="@+id/reg_contact_email_container"
+        app:layout_constraintTop_toBottomOf="@+id/reg_contact_email_container" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/reg_contact_to_prev_page_btn"
+        android:layout_width="120dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_gradient"
+        android:text="@string/previous"
+        app:layout_constraintStart_toStartOf="@+id/reg_contact_email_container"
+        app:layout_constraintTop_toBottomOf="@+id/reg_contact_email_container" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/reg_contact_email_container"
+        app:layout_constraintStart_toStartOf="@+id/reg_contact_email_container"
+        app:layout_constraintTop_toBottomOf="@+id/reg_contact_to_next_page_btn">
+
+        <TextView
+            android:id="@+id/text_ask_acc"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="0dp"
+            android:text="@string/already_have_account" />
+
+        <TextView
+            android:id="@+id/to_login_from_reg_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/log_in"
+            android:textColor="@color/app_orange" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

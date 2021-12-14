@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registration_form_navigation"
+    app:startDestination="@layout/activity_registration_main">
+
+    <fragment
+        android:id="@+id/fragment_reg_company_info"
+        android:name="com.example.share4care.loginAndRegisterForm.reg_company_info"
+        android:label="@string/company_info_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_reg_company_info"
+        >
+        <action
+            android:id="@+id/action_fragment_reg_company_info_to_fragment_reg_account_info"
+            app:destination="@id/fragment_reg_account_info" />
+        <action
+            android:id="@+id/action_fragment_reg_company_info_to_fragment_reg_contact_info"
+            app:destination="@id/fragment_reg_contact_info" />
+        <action
+            android:id="@+id/action_fragment_reg_company_info_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_reg_account_info"
+        android:name="com.example.share4care.loginAndRegisterForm.reg_account_info"
+        android:label="@string/company_info_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_reg_account_info"
+        >
+        <action
+            android:id="@+id/action_fragment_reg_account_info_to_fragment_reg_company_info"
+            app:destination="@id/fragment_reg_company_info" />
+        <action
+            android:id="@+id/action_fragment_reg_account_info_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_reg_contact_info"
+        android:name="com.example.share4care.loginAndRegisterForm.reg_contact_info"
+        android:label="@string/company_info_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_reg_contact_info"
+        >
+        <action
+            android:id="@+id/action_fragment_reg_contact_info_to_fragment_reg_personal_info"
+            app:destination="@id/fragment_reg_personal_info" />
+        <action
+            android:id="@+id/action_fragment_reg_contact_info_to_fragment_reg_company_info"
+            app:destination="@id/fragment_reg_company_info" />
+        <action
+            android:id="@+id/action_fragment_reg_contact_info_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_reg_personal_info"
+        android:name="com.example.share4care.loginAndRegisterForm.reg_personal_info"
+        android:label="@string/company_info_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_reg_personal_info"
+        >
+        <action
+            android:id="@+id/action_fragment_reg_personal_info_to_fragment_reg_contact_info"
+            app:destination="@id/fragment_reg_contact_info" />
+        <action
+            android:id="@+id/action_fragment_reg_personal_info_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.share4care.loginAndRegisterForm.LoginActivity"
+        android:label="activity_registration_main"
+        tools:layout="@layout/activity_login" />
+
+</navigation>

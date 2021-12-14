@@ -54,6 +54,7 @@ dependencies {
     implementation platform ('com.google.firebase:firebase-bom:29.0.1')
     implementation 'com.google.firebase:firebase-database-ktx:20.0.3'
     implementation 'com.google.firebase:firebase-storage-ktx:20.0.0'
+    implementation 'com.google.firebase:firebase-database:20.0.3'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
@@ -74,4 +75,7 @@ dependencies {
 
     // Material io
     implementation 'com.google.android.material:material:1.5.0-beta01'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+
 }
