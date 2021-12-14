@@ -41,6 +41,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".chooili.CreateESTActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.AdminHome"
+            android:exported="false" />
+        <activity
             android:name=".RegisterTravelActivity"
             android:exported="false" />
         <activity

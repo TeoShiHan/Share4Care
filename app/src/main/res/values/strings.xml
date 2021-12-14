@@ -51,6 +51,7 @@
     <string name="contactEmail">Contact Email</string>
     <string name="image">Upload Image</string>
     <string name="create">DONE</string>
+<<<<<<< HEAD
     <string name="username_or_email">username or email</string>
     <string name="forgot_password">forgot password?</string>
     <string name="log_in">\u0020Log in</string>
@@ -71,6 +72,10 @@
     <string name="company_info_fragment">company_info_fragment</string>
     <string name="date_picker">Date Picker</string>
     <string name="i_am_oku">I am OKU</string>
+=======
+    <string name="nav_drawer_open">Open navigation drawer</string>
+    <string name="nav_drawer_close">Close navigation drawer</string>
+>>>>>>> e86150148d22e10be028cef550ab28ed555715c8
     <string-array name="event_category">
         <item>Charity</item>
         <item>Seminar</item>
