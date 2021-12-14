@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "773288870677",
-    "firebase_url": "https://share4care-821af-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "share4care-821af",
-    "storage_bucket": "share4care-821af.appspot.com"
+    "project_number": "651519457282",
+    "firebase_url": "https://alternateconnect-e73a1-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "alternateconnect-e73a1",
+    "storage_bucket": "alternateconnect-e73a1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:773288870677:android:5cdbc408b9b37eb85f9f1c",
+        "mobilesdk_app_id": "1:651519457282:android:163ccd928573b33375cf1b",
         "android_client_info": {
           "package_name": "com.example.share4care"
         }
       },
       "oauth_client": [
         {
-          "client_id": "773288870677-m1pkgria5pr0243vs9j5smm80kerj2f3.apps.googleusercontent.com",
+          "client_id": "651519457282-1njmboehhntlcusshnck8nvoudkpsfkn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD0f6XiTGYURzfgnBPR3Qhl2vc6Ml1wwMo"
+          "current_key": "AIzaSyDf1aJpf9oHGy3DbmqFSP-lzFJZiYhDf5o"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "773288870677-m1pkgria5pr0243vs9j5smm80kerj2f3.apps.googleusercontent.com",
+              "client_id": "651519457282-1njmboehhntlcusshnck8nvoudkpsfkn.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
