@@ -1,4 +1,4 @@
-package com.example.share4care.loginAndRegisterForm
+package com.example.share4care.shihan
 
 import android.app.Activity
 import android.content.Intent
@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.share4care.R
 import com.example.share4care.databinding.FragmentRegCompanyInfoBinding
-import com.example.share4care.databinding.FragmentRegContactInfoBinding
-import com.google.android.gms.common.internal.FallbackServiceBroker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -29,7 +29,7 @@ class RegCompanyInfo : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val userViewModel: UserViewModel by viewModels()
+        val userViewModel: UserViewModel by activityViewModels()
         lateinit var companyData: UserCompanyInfo
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reg_company_info, container, false)
@@ -58,7 +58,7 @@ class RegCompanyInfo : Fragment() {
                 binding.regSocialMediaInput.text.toString()
             )
 
-            userViewModel.companyInformation = companyData
+//            userViewModel.companyInformation = companyData
             Navigation.findNavController(it).navigate(R.id.action_regCompanyInfo_to_regAccountInfo)
         }
 
@@ -77,7 +77,7 @@ class RegCompanyInfo : Fragment() {
                 "N/A",
                 "N/A"
             )
-            userViewModel.companyInformation = companyData
+//            userViewModel.companyInformation = companyData
             Navigation.findNavController(it).navigate(R.id.action_regCompanyInfo_to_regAccountInfo)
         }
 

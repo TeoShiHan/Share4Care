@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
-        tools:context=".loginAndRegisterForm.LoginActivity">
+        tools:context=".shihan.LoginActivity">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/reg_company_name_input_container"

@@ -1,17 +1,14 @@
-package com.example.share4care.loginAndRegisterForm
+package com.example.share4care.shihan
 
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import com.example.share4care.R
 import com.example.share4care.databinding.ActivityLoginBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlin.properties.Delegates
 
 class LoginActivity : AppCompatActivity() {
 

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
-        tools:context=".loginAndRegisterForm.LoginActivity">
+        tools:context=".shihan.LoginActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_for_image"

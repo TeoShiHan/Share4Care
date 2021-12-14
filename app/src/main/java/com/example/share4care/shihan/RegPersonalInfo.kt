@@ -1,4 +1,4 @@
-package com.example.share4care.loginAndRegisterForm
+package com.example.share4care.shihan
 
 import android.app.Activity
 import android.content.Intent
@@ -9,14 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.share4care.R
 import com.example.share4care.databinding.FragmentRegPersonalInfoBinding
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
 
@@ -34,9 +35,8 @@ class RegPersonalInfo : Fragment() {
         val datePicker = getDatePicker()
         val fragmentManager = activity?.supportFragmentManager
         lateinit var personalData: UserPersonalInfo
-        val viewModel: UserViewModel by viewModels()
-        val gson = GsonCustom()
-        val fb = Firebase()
+        val userViewModel: UserViewModel by viewModels()
+
         // Listeners
         binding.regPersonalToNextPageBtn.setOnClickListener{
 
@@ -68,14 +68,15 @@ class RegPersonalInfo : Fragment() {
 
                 personalData =
                 UserPersonalInfo(
-                    java.util.UUID.randomUUID(),
                     binding.regPersonalNameInput.text.toString(),
                     gender,
                     binding.regPersonalBirthdateInput.text.toString(),
                     binding.regPersonalAddressInput.text.toString(),
                     binding.regPersonalIsOkuCheckbox.isChecked.toString()
                 )
-                viewModel.personalInformation = personalData
+
+                val bund
+
                 Navigation.findNavController(it).navigate(R.id.action_reg_personal_info_to_reg_contact_info)
             }
         }

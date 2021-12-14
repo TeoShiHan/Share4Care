@@ -6,7 +6,7 @@
     app:startDestination="@id/reg_personal_info">
     <fragment
         android:id="@+id/reg_personal_info"
-        android:name="com.example.share4care.loginAndRegisterForm.RegPersonalInfo"
+        android:name="com.example.share4care.shihan.RegPersonalInfo"
         android:label="reg_personal_info"
         tools:layout="@layout/fragment_reg_personal_info">
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/reg_contact_info"
-        android:name="com.example.share4care.loginAndRegisterForm.RegContactInfo"
+        android:name="com.example.share4care.shihan.RegContactInfo"
         android:label="reg_contact_info"
         tools:layout="@layout/fragment_reg_contact_info">
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/regCompanyInfo"
-        android:name="com.example.share4care.loginAndRegisterForm.RegCompanyInfo"
+        android:name="com.example.share4care.shihan.RegCompanyInfo"
         android:label="RegCompanyInfo"
         tools:layout="@layout/fragment_reg_company_info">
 
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/regAccountInfo"
-        android:name="com.example.share4care.loginAndRegisterForm.RegAccountInfo"
+        android:name="com.example.share4care.shihan.RegAccountInfo"
         android:label="RegAccountInfo"
         tools:layout="@layout/fragment_reg_account_info">
         <action

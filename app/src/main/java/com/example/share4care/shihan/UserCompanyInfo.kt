@@ -1,4 +1,4 @@
-package com.example.share4care.loginAndRegisterForm
+package com.example.share4care.shihan
 
 data class UserCompanyInfo(
     val companyName:String,

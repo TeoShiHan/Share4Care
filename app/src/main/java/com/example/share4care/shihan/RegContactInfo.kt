@@ -1,4 +1,4 @@
-package com.example.share4care.loginAndRegisterForm
+package com.example.share4care.shihan
 
 import android.app.Activity
 import android.content.Intent
@@ -7,12 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.share4care.R
 import com.example.share4care.databinding.FragmentRegContactInfoBinding
-import com.example.share4care.databinding.FragmentRegPersonalInfoBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -29,6 +30,10 @@ class RegContactInfo : Fragment() {
 
     ): View? {
 
+        val userViewModel: UserViewModel by activityViewModels()
+
+        lateinit var contactData: UserContactInfo
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reg_contact_info, container, false)
 
         binding.regContactToPrevPageBtn.setOnClickListener(){
@@ -40,14 +45,21 @@ class RegContactInfo : Fragment() {
             if (containError){return@setOnClickListener}
             containError = actionValidateEmail(binding.regContactEmailInput, binding.regContactEmailContainer)
             if (containError){return@setOnClickListener}
-            else {Navigation.findNavController(it).navigate(R.id.action_reg_contact_info_to_regCompanyInfo)}
+
+            contactData = UserContactInfo(
+                binding.regContactPhoneInput.text.toString(),
+                binding.regContactEmailInput.text.toString()
+            )
+
+//            userViewModel.contactInformation = contactData
+            userViewModel.pushPersonalInfoToFirebase()
+            Navigation.findNavController(it).navigate(R.id.action_reg_contact_info_to_regCompanyInfo)
         }
 
         binding.toLoginFromRegContact.setOnClickListener {
             val goToLogin = getIntentToOtherActivity<LoginActivity>(activity as Activity)
             startActivity(goToLogin)
         }
-
         return binding.root
     }
 

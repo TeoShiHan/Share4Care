@@ -1,6 +1,5 @@
-package com.example.share4care.loginAndRegisterForm
+package com.example.share4care.shihan
 import com.google.gson.Gson
-import java.lang.reflect.Type
 
 data class User(
     val primary_key: String,
