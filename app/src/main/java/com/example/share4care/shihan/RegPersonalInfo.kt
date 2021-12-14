@@ -75,7 +75,7 @@ class RegPersonalInfo : Fragment() {
                     binding.regPersonalIsOkuCheckbox.isChecked.toString()
                 )
 
-                val bund
+
 
                 Navigation.findNavController(it).navigate(R.id.action_reg_personal_info_to_reg_contact_info)
             }

@@ -41,6 +41,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".chooili.AdminTravelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.AdminServiceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.AdminEventActivity"
+            android:exported="false" />
+        <activity
             android:name=".chooili.CreateESTActivity"
             android:exported="false" />
         <activity
