@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_reg"
+    app:startDestination="@id/reg_personal_info">
+    <fragment
+        android:id="@+id/reg_personal_info"
+        android:name="com.example.share4care.loginAndRegisterForm.RegPersonalInfo"
+        android:label="reg_personal_info"
+        tools:layout="@layout/fragment_reg_personal_info">
+        <action
+            android:id="@+id/action_reg_personal_info_to_reg_contact_info"
+            app:destination="@id/reg_contact_info" />
+    </fragment>
+    <fragment
+        android:id="@+id/reg_contact_info"
+        android:name="com.example.share4care.loginAndRegisterForm.RegContactInfo"
+        android:label="reg_contact_info"
+        tools:layout="@layout/fragment_reg_contact_info">
+        <action
+            android:id="@+id/action_reg_contact_info_to_reg_personal_info"
+            app:destination="@id/reg_personal_info" />
+        <action
+            android:id="@+id/action_reg_contact_info_to_regCompanyInfo"
+            app:destination="@id/regCompanyInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/regCompanyInfo"
+        android:name="com.example.share4care.loginAndRegisterForm.RegCompanyInfo"
+        android:label="RegCompanyInfo"
+        tools:layout="@layout/fragment_reg_company_info">
+
+        <action
+            android:id="@+id/action_regCompanyInfo_to_reg_contact_info"
+            app:destination="@id/reg_contact_info" />
+        <action
+            android:id="@+id/action_regCompanyInfo_to_regAccountInfo"
+            app:destination="@id/regAccountInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/regAccountInfo"
+        android:name="com.example.share4care.loginAndRegisterForm.RegAccountInfo"
+        android:label="RegAccountInfo"
+        tools:layout="@layout/fragment_reg_account_info">
+        <action
+            android:id="@+id/action_regAccountInfo_to_regCompanyInfo"
+            app:destination="@id/regCompanyInfo" />
+    </fragment>
+</navigation>

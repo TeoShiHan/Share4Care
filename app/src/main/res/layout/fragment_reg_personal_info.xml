@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        tools:context=".loginAndRegisterForm.reg_personal_info">
+        tools:context=".loginAndRegisterForm.RegPersonalInfo">
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -74,14 +74,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/reg_personal_birthdate_container"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:editable="false"
             android:hint="@string/date_of_birth"
             app:boxStrokeColor="@color/app_orange"
             app:hintTextColor="@color/app_orange"
-            app:layout_constraintEnd_toEndOf="@+id/reg_personal_name_container"
             app:layout_constraintStart_toStartOf="@+id/reg_personal_name_container"
             app:layout_constraintTop_toBottomOf="@+id/reg_personal_name_container"
             app:startIconDrawable="@drawable/birthday_icon"
@@ -89,7 +88,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/reg_personal_birthdate_input"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:editable="false"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup"
@@ -107,8 +106,8 @@
             android:hint="@string/address"
             app:boxStrokeColor="@color/app_orange"
             app:hintTextColor="@color/app_orange"
-            app:layout_constraintEnd_toEndOf="@+id/reg_personal_birthdate_container"
-            app:layout_constraintStart_toStartOf="@+id/reg_personal_birthdate_container"
+            app:layout_constraintEnd_toEndOf="@+id/reg_personal_name_container"
+            app:layout_constraintStart_toStartOf="@+id/reg_personal_name_container"
             app:layout_constraintTop_toBottomOf="@+id/reg_personal_birthdate_container"
             app:startIconDrawable="@drawable/address_icon"
             tools:ignore="MissingConstraints">
@@ -171,12 +170,12 @@
             android:id="@+id/calendar_for_date_pick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="250dp"
+            android:layout_marginStart="20dp"
             android:layout_weight="1"
             android:src="@drawable/calendar_icon"
             app:layout_constraintBottom_toBottomOf="@+id/reg_personal_birthdate_container"
             app:layout_constraintEnd_toEndOf="@+id/reg_personal_name_container"
-            app:layout_constraintStart_toStartOf="@+id/reg_personal_name_container"
+            app:layout_constraintStart_toEndOf="@+id/reg_personal_birthdate_container"
             app:layout_constraintTop_toTopOf="@+id/reg_personal_birthdate_container" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

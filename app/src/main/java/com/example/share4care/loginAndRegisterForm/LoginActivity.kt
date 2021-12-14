@@ -13,16 +13,16 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.properties.Delegates
 
-
 class LoginActivity : AppCompatActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_login)
 
         val binding = getActivityBinding(this)
+
         val goToRegistrationPage = getIntentToOtherActivity<RegistrationMain>(this)
 
         binding.toRegButton.setOnClickListener(){
@@ -33,12 +33,10 @@ class LoginActivity : AppCompatActivity() {
             if (isEmpty){ return@setOnClickListener}
         }
 
-
         binding.toLoginFromRegAcc.setOnClickListener(){
             startActivity(goToRegistrationPage)
         }
     }
-
 
     private fun getActivityBinding(activity: Activity): ActivityLoginBinding {
         return DataBindingUtil.setContentView(activity, R.layout.activity_login)
