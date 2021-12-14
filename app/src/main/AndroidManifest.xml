@@ -22,6 +22,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Share4Care">
         <activity
+            android:name=".chooili.AdminTravelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.AdminServiceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.AdminEventActivity"
+            android:exported="false" />
+        <activity
             android:name=".chooili.CreateESTActivity"
             android:exported="false" />
         <activity
