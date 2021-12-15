@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Share4Care">
         <activity
+<<<<<<< HEAD
             android:name=".chooili.Activity_Verify_User"
             android:exported="false" />
         <activity
@@ -35,9 +36,18 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+=======
+            android:name=".ESTActivity"
+            android:exported="false" />
+        <activity
+            android:name=".shihan.RegistrationMain"
+            android:exported="false" >
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+>>>>>>> 24e21449decbbf97b85ba0161d210b172cf34305
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".shihan.LoginActivity"
@@ -59,9 +69,6 @@
             android:exported="false" />
         <activity
             android:name=".chooili.CreateESTActivity"
-            android:exported="false" />
-        <activity
-            android:name=".chooili.AdminHome"
             android:exported="false" />
         <activity
             android:name=".RegisterTravelActivity"
@@ -86,25 +93,25 @@
 
         <activity
             android:name=".HomeActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_home">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+<!--        <activity-->
+<!--            android:name=".MainActivity"-->
+<!--            android:exported="true">-->
 
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+<!--            &lt;!&ndash;-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--            &ndash;&gt;-->
+<!--        </activity>-->
     </application>
 
 </manifest>

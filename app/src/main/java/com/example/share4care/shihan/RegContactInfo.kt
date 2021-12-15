@@ -2,15 +2,19 @@ package com.example.share4care.shihan
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.share4care.R
 import com.example.share4care.databinding.FragmentRegContactInfoBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -67,10 +71,11 @@ class RegContactInfo : Fragment() {
                 binding.regContactEmailInput.text.toString()
             )
 
-            val action = RegContactInfoDirections.actionRegContactInfoToRegCompanyInfo(
-                contactData,
-                args.personalInfo
-            )
+            val action =
+                com.example.share4care.shihan.RegContactInfoDirections.actionRegContactInfoToRegCompanyInfo(
+                    contactData,
+                    args.personalInfo
+                )
 
             Navigation.findNavController(it).navigate(action)
 //            userViewModel.contactInformation = contactData
@@ -88,6 +93,7 @@ class RegContactInfo : Fragment() {
     private fun actionValidatePhoneField(
         phoneField: TextInputEditText,
         phonefieldContainer: TextInputLayout
+
     ): Boolean {
         val pattern =
             "^(01[(2-9|0)]\\d{7})\$|^(011\\d{8})\$|^(0\\d\\d{7})\$|^(0\\d{2}\\d{6})\$|^(0\\d\\d{8})\$".toRegex()
@@ -131,10 +137,23 @@ class RegContactInfo : Fragment() {
             emailfieldContainer.error = null
             return false
         }
-
     }
 
     private inline fun <reified T : Any> getIntentToOtherActivity(currentActivity: Activity): Intent {
         return Intent(currentActivity, T::class.java)
     }
+
+    private var imgUri: Uri? = null
+    private lateinit var imgView: ImageView
+    // get image view
+    // parameter ==
+    // registerForActivityResult()
+    var imageData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            imgUri  = data?.data
+            Glide.with(imgView.context).load(imgUri).into(imgView)
+        }
+    }
+
 }

@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#B00020</color>
     <color name="app_orange">#EA974D</color>
+    <color name="app_secondary_orange">#F2C094</color>
     <color name="status_bar">#616161</color>
     <color name="corn">#FFF380</color>
 
@@ -47,5 +48,13 @@
 
     <color name="colorToolbarTransparentDay">#ABFFFFFF</color>
     <color name="colorToolbarTransparentNight">#AB000000</color>
+
+    <!--  My color  -->
+    <color name="colorLike">#4BB543</color>
+    <color name="colorDislike">#df4759</color>
+    <color name="colorSave">#ff66ff</color>
+    <color name="colorShare">#0066ff</color>
+    <color name="colorReport">#ff9900</color>
+    <color name="colorLink">#009688</color>
 
 </resources>

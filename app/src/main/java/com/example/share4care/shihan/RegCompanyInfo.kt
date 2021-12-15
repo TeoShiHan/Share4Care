@@ -18,15 +18,14 @@ import com.google.android.material.textfield.TextInputLayout
 
 
 class RegCompanyInfo : Fragment() {
-
     private lateinit var binding: FragmentRegCompanyInfoBinding
-    val args: RegCompanyInfoArgs by navArgs()
+    private val args: RegCompanyInfoArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
 
+    ): View? {
         lateinit var companyData: UserCompanyInfo
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reg_company_info, container, false)
@@ -54,7 +53,12 @@ class RegCompanyInfo : Fragment() {
                 binding.regSocialMediaInput.text.toString()
             )
 
-            val action = RegCompanyInfoDirections.actionRegCompanyInfoToRegAccountInfo(companyData, args.contactData, args.personalData)
+            val action =
+                com.example.share4care.shihan.RegCompanyInfoDirections.actionRegCompanyInfoToRegAccountInfo(
+                    companyData,
+                    args.contactData,
+                    args.personalData
+                )
 //          userViewModel.companyInformation = companyData
             Navigation.findNavController(it).navigate(action)
         }
@@ -76,7 +80,12 @@ class RegCompanyInfo : Fragment() {
             )
 //          userViewModel.companyInformation = companyData
 //          Navigation.findNavController(it).navigate(R.id.action_regCompanyInfo_to_regAccountInfo)
-            val action = RegCompanyInfoDirections.actionRegCompanyInfoToRegAccountInfo(companyData, args.contactData, args.personalData)
+            val action =
+                com.example.share4care.shihan.RegCompanyInfoDirections.actionRegCompanyInfoToRegAccountInfo(
+                    companyData,
+                    args.contactData,
+                    args.personalData
+                )
             Navigation.findNavController(it).navigate(action)
         }
 
@@ -203,13 +212,4 @@ class RegCompanyInfo : Fragment() {
         return Intent(currentActivity, T::class.java)
     }
 
-//    private fun datAssemblingUser(){
-//        val userTable = UserTableRecord(
-//
-//        )
-//    }
-//
-//    private fun dataAssemblingCompnay(){
-//
-//    }
 }
