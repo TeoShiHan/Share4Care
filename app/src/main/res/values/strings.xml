@@ -42,7 +42,7 @@
 
     <!-- Text Headers in Forms -->
     <string name="title">Title</string>
-    <string name="host">Host/Organization Name</string>
+    <string name="host">Host</string>
     <string name="_category">Category</string>
     <string name="description">Description</string>
     <string name="date">Date</string>
@@ -51,6 +51,9 @@
     <string name="contactEmail">Contact Email</string>
     <string name="image">Upload Image</string>
     <string name="create">DONE</string>
+    <string name="externalLink">External Link</string>
+    <string name="attachment">Attachment</string>
+    <string name="tag">Tag</string>
     <string name="username_or_email">username or email</string>
     <string name="forgot_password">forgot password?</string>
     <string name="log_in">\u0020Log in</string>
@@ -71,12 +74,10 @@
     <string name="company_info_fragment">company_info_fragment</string>
     <string name="date_picker">Date Picker</string>
     <string name="i_am_oku">I am OKU</string>
-=======
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="nav_drawer_close">Close navigation drawer</string>
     <string name="sign_up_user">Sign Up | User</string>
     <string name="please_fill_in_your_details">Please fill in your details</string>
-    >>>>>>> e86150148d22e10be028cef550ab28ed555715c8
     <string-array name="event_category">
         <item>Charity</item>
         <item>Seminar</item>
@@ -94,6 +95,5 @@
         <item>Accessible Parking Space</item>
         <item>Accessible Public Toilet</item>
     </string-array>
-
 
 </resources>

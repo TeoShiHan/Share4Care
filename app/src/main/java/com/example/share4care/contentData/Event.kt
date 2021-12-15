@@ -15,9 +15,14 @@ data class Event(
     var contactNumber:String,
     var contactEmail:String,
     var image:String,
-    var status:Int
+    var status:Int,
+    var like: MutableList<String>?,
+    var dislike: MutableList<String>?,
+    var save: MutableList<String>?,
+    var comment: MutableList<UserComment>?
+
 ):Serializable {
     constructor(title:String, host:String, category:String, description: String, date:String,
-                address: String, latitude: Double, longtitude: Double,contactNumber: String, contactEmail: String, imgUrl:String ): this
-        (title, host, category, description, date, address, latitude, longtitude, contactNumber, contactEmail, imgUrl, 0)
+                address: String, latitude: Double, longtitude: Double, contactNumber: String, contactEmail: String, imgUrl:String ): this
+        (title, host, category, description, date, address, latitude, longtitude, contactNumber, contactEmail, imgUrl, 0, arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf())
 }
