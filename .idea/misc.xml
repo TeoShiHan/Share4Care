@@ -81,8 +81,15 @@
         <entry key="..\:/Users/Teo Shi Han/Documents/07 TARCITEMS/Year2Sem1/MobileApplications/Share4Care/app/src/main/res/layout/fragment_reg_personal_inf2o.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/Teo Shi Han/Documents/07 TARCITEMS/Year2Sem1/MobileApplications/Share4Care/app/src/main/res/layout/fragment_reg_personal_info.xml" value="0.33" />
         <entry key="..\:/Users/Teo Shi Han/Documents/07 TARCITEMS/Year2Sem1/MobileApplications/Share4Care/app/src/main/res/layout/fragment_reg_personal_info333.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/drawable/address.xml" value="0.1" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/drawable/admin_home_icon.xml" value="0.10740740740740741" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/drawable/dob.xml" value="0.1" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/drawable/email.xml" value="0.1" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/drawable/oku.xml" value="0.1" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/drawable/phone.xml" value="0.1" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/font/amita_bold.xml" value="0.1" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/font/bungee_inline.xml" value="0.11574074074074074" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_about_us.xml" value="0.11879432624113476" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_admin_event.xml" value="0.15806159420289856" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_admin_home.xml" value="0.33" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_admin_home2.xml" value="0.27291666666666664" />
@@ -94,14 +101,19 @@
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_register_event.xml" value="0.25" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_register_service.xml" value="0.25" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_register_travel.xml" value="0.1" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_verify_est.xml" value="0.1" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/activity_verify_user.xml" value="0.1" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/card_layout.xml" value="0.25" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/dialog_choose_type.xml" value="0.1" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/est_view.xml" value="0.14628623188405798" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/fragment_calendar.xml" value="0.1" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/fragment_post_detail.xml" value="0.25" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/header.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/list_item.xml" value="0.33" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/navigation_drawer.xml" value="0.11018237082066869" />
+        <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/layout/user_view.xml" value="0.53125" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/menu/admin_menu.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/User/Desktop/Share4Care/app/src/main/res/menu/bottom_nav_menu.xml" value="0.27291666666666664" />
       </map>

@@ -142,7 +142,7 @@ class RegisterServiceActivity : AppCompatActivity() {
                                 image
                             )
 
-                            val key = title
+                            val key = title+host+category
 
                             myDatabaseRef.child(key).setValue(newService)
                                 .addOnSuccessListener {

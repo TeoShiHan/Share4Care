@@ -123,7 +123,7 @@ class RegisterEventActivity : AppCompatActivity(){
                             image = it.toString()
                             val newEvent = Event(title, host, category, description, date, originalAddress, foundLatitude, foundLongtitude, contactNumber, contactEmail, image)
 
-                            val key = title
+                            val key = title+host+date
 
                             myDatabaseRef.child(key).setValue(newEvent)
                                 .addOnSuccessListener {

@@ -22,17 +22,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Share4Care">
         <activity
-            android:name=".ESTActivity"
+            android:name=".chooili.Activity_Verify_User"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.Activity_Verify_EST"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.Activity_About_Us"
             android:exported="false" />
         <activity
             android:name=".shihan.RegistrationMain"
-            android:exported="false" >
+            android:exported="false">
+        </activity>
+        <activity android:name=".ESTActivity"
+            android:exported="false"/>
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
 
+
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
-        </activity>
         <activity
             android:name=".shihan.LoginActivity"
             android:exported="true">

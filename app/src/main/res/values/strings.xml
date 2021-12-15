@@ -74,6 +74,7 @@
     <string name="company_info_fragment">company_info_fragment</string>
     <string name="date_picker">Date Picker</string>
     <string name="i_am_oku">I am OKU</string>
+
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="nav_drawer_close">Close navigation drawer</string>
     <string name="sign_up_user">Sign Up | User</string>
