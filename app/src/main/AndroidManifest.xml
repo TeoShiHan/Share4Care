@@ -21,10 +21,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Share4Care">
-
+        <activity
+            android:name=".chooili.Activity_Verify_User"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.Activity_Verify_EST"
+            android:exported="false" />
+        <activity
+            android:name=".chooili.Activity_About_Us"
+            android:exported="false" />
         <activity
             android:name=".shihan.RegistrationMain"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
