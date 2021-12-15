@@ -108,6 +108,12 @@
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/actualContactNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -122,11 +128,6 @@
             app:helperText="Required*"
             app:helperTextTextColor="@color/red">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/actualContactNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
