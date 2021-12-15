@@ -1,7 +1,7 @@
 package com.example.share4care.shihan
 
 data class UserTableRecord(
-
+    val userName:String,
     val password: String,
     val name: String,
     val gender: String,

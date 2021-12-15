@@ -75,7 +75,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     var markersAll = mutableListOf<Marker>()
 
-    private lateinit var listEvent: MutableList<Event>
+    private lateinit var listEvent : MutableList<Event>
 
     var listService = mutableListOf<Service>()
 
@@ -140,18 +140,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-
-        mapFragment.getMapAsync(this)
-
-        loadEvent(object:EventCallback{
-            override fun onEventBack(s: MutableList<Event>) {
-                listEvent = s
-            }
-        })
-
         loadService(object:ServiceCallback{
             override fun onServiceBack(s: MutableList<Service>) {
                 listService = s
@@ -163,6 +151,18 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 listTravel = s
             }
         })
+
+        loadEvent(object:EventCallback{
+            override fun onEventBack(s: MutableList<Event>) {
+                listEvent = s
+            }
+        })
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+
+        mapFragment.getMapAsync(this)
+
 
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(this).inflate(R.layout.dialog_choose_type, null)
