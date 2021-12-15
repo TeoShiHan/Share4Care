@@ -27,7 +27,8 @@
                 android:id="@+id/actualTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:inputType="textMultiLine"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -46,7 +47,8 @@
                 android:id="@+id/actualHost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:inputType="textMultiLine"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -106,6 +108,12 @@
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/actualContactNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -120,11 +128,6 @@
             app:helperText="Required*"
             app:helperTextTextColor="@color/red">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/actualContactNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -159,7 +162,7 @@
                 android:text="@string/image"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:backgroundTint="@color/colorSecondaryText" />
+                app:backgroundTint="@color/app_orange" />
 
             <ImageView
                 android:id="@+id/actualImage"
@@ -179,7 +182,9 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/create"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:backgroundTint="@color/app_orange" />
+
     </LinearLayout>
 
 </ScrollView>

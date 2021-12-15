@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        tools:context=".shihan.RegPersonalInfo">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints">
+
+            <RadioButton
+                android:id="@+id/reg_personal_male_radio"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="60dp"
+                android:background="@drawable/radio_button_selector"
+                android:button="@android:color/transparent"
+                android:padding="16dp"
+                android:checked="true"
+                android:text="@string/male"
+                android:textAlignment="center" />
+
+            <RadioButton
+                android:id="@+id/reg_personal_female_radio"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/radio_button_selector"
+                android:button="@android:color/transparent"
+                android:padding="16dp"
+                android:shadowColor="#1B1B1B"
+                android:text="@string/female"
+                android:textAlignment="center" />
+
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_personal_name_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/name"
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="@+id/radioGroup"
+            app:layout_constraintStart_toStartOf="@+id/radioGroup"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+            app:startIconDrawable="@drawable/name_icon_sized"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_personal_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+                tools:layout_editor_absoluteX="0dp" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_personal_birthdate_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:editable="false"
+            android:hint="@string/date_of_birth"
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintStart_toStartOf="@+id/reg_personal_name_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_personal_name_container"
+            app:startIconDrawable="@drawable/birthday_icon"
+            tools:ignore="Deprecated,MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_personal_birthdate_input"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+                tools:layout_editor_absoluteX="0dp" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_personal_address_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/address"
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="@+id/reg_personal_name_container"
+            app:layout_constraintStart_toStartOf="@+id/reg_personal_name_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_personal_birthdate_container"
+            app:startIconDrawable="@drawable/address_icon"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_personal_address_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+                tools:layout_editor_absoluteX="0dp" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/reg_personal_is_oku_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/i_am_oku"
+            app:layout_constraintStart_toStartOf="@+id/reg_personal_address_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_personal_address_container" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/reg_personal_to_next_page_btn"
+            android:layout_width="150dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_gradient"
+            android:text="@string/next"
+            app:layout_constraintEnd_toEndOf="@+id/reg_personal_address_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_personal_address_container" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@+id/reg_personal_to_next_page_btn"
+            app:layout_constraintStart_toStartOf="@+id/reg_personal_is_oku_checkbox"
+            app:layout_constraintTop_toBottomOf="@+id/reg_personal_to_next_page_btn">
+
+            <TextView
+                android:id="@+id/reg_personal_ask_acc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:text="@string/already_have_account" />
+
+            <TextView
+                android:id="@+id/reg_personal_to_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:text="@string/log_in"
+                android:textColor="@color/app_orange" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/calendar_for_date_pick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:src="@drawable/calendar_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/reg_personal_birthdate_container"
+            app:layout_constraintEnd_toEndOf="@+id/reg_personal_name_container"
+            app:layout_constraintStart_toEndOf="@+id/reg_personal_birthdate_container"
+            app:layout_constraintTop_toTopOf="@+id/reg_personal_birthdate_container" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

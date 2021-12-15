@@ -37,7 +37,7 @@ import java.util.*
 class RegisterEventActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityRegisterEventBinding
-    private var image: String = ""
+    private lateinit var image: String
     private var imgUri: Uri? = null
     private lateinit var imgView: ImageView
     private lateinit var displayDate: EditText
@@ -46,7 +46,7 @@ class RegisterEventActivity : AppCompatActivity(){
     val myDatabaseRef = database.getReference("Events")
     var myStorageRef = FirebaseStorage.getInstance().getReference("images")
 
-    val regNum:Regex = Regex("^(01[(2-9|0)]\\d{7})\$|^(011\\d{8})\$")
+    val regNum:Regex = Regex("^(01[(2-9|0)]\\d{7})\$|^(011\\d{8})\$|^(0\\d\\d{7})\$|^(0\\d{2}\\d{6})\$|^(0\\d\\d{8})\$") //
     val regMail:Regex = Regex("^[a-zA-Z]\\w+@(\\S+)\$")
 
     var imageData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -116,33 +116,34 @@ class RegisterEventActivity : AppCompatActivity(){
                 val fileRef = myStorageRef.child(title+host+date+"."+getFileExtension(imgUri!!))
 
                 fileRef.putFile(imgUri!!)
-                    .addOnSuccessListener {
-                        imgView.setImageURI(null)
-                        Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
-                        image = fileRef.downloadUrl.toString()
+                    .addOnSuccessListener { snapshot ->
+                        val result = snapshot.storage.downloadUrl
+                        result.addOnSuccessListener {
+                            Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
+                            image = it.toString()
+                            val newEvent = Event(title, host, category, description, date, originalAddress, foundLatitude, foundLongtitude, contactNumber, contactEmail, image)
+
+                            val key = title
+
+                            myDatabaseRef.child(key).setValue(newEvent)
+                                .addOnSuccessListener {
+                                    Toast.makeText(applicationContext, "Event added and awaiting for verification", Toast.LENGTH_LONG).show()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(applicationContext, it.message.toString(), Toast.LENGTH_LONG)
+                                        .show()
+                                }
+
+                            val data = Intent()
+                            data.putExtra(HomeActivity.EVENT, newEvent)
+                            setResult(RESULT_OK, data)
+                            finish()
+                        }
                     }
                     .addOnFailureListener{
                         Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_LONG).show()
                     }
             }
-
-            val newEvent = Event(title, host, category, description, date, originalAddress, foundLatitude, foundLongtitude, contactNumber, contactEmail, image)
-
-            val key = title+host+date
-
-            myDatabaseRef.child(key).setValue(newEvent)
-                .addOnSuccessListener {
-                    Toast.makeText(applicationContext, "Event added and awaiting for verification", Toast.LENGTH_LONG).show()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(applicationContext, it.message.toString(), Toast.LENGTH_LONG)
-                        .show()
-                }
-
-            val data = Intent()
-            data.putExtra(HomeActivity.EVENT, newEvent)
-            setResult(RESULT_OK, data)
-            finish()
         }
 
     }
