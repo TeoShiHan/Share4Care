@@ -1,50 +1,56 @@
 package com.template.androidtemplate.ui.main
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.share4care.MainActivity
 import com.example.share4care.R
-import com.example.share4care.ee.PostDetailFragment
+import com.example.share4care.contentData.Event
 
 public class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     private var context: Context? = null
 
-    private val kode = arrayOf("d116df5",
-        "36ffc75", "f5cfe78", "5b87628",
-        "db8d14e", "9913dc4", "e120f96",
-        "466251b")
+    private val title = arrayOf("d116df5d116df5",
+        "36ffc7536ffc75", "f5cfe78f5cfe78f", "5b876285b876",
+        "db8d14edb8d14e", "9913dc49913dc4", "e120f96e120f96",
+        "466251b466251b")
 
-    private val kategori = arrayOf("Kekayaan", "Teknologi",
-        "Keluarga", "Bisnis",
-        "Keluarga", "Hutang",
-        "Teknologi", "Pidana")
+    private val desc = arrayOf("d116df d116df5d116df5d1 16df5d116df5d116 df5d116df5d116df5 setEllipsize  setEllipsize setEllipsize setEllipsize  ",
+        "36ffc7536ff c7536ffc7536ffc 7536ffc7536ffc 7536ffc75 36ffc75 f5cfe78f5cfe78f5cfe78f5cfe78", "f5cfe78f5cfe78f5cfe78f 5cfe78f5c fe78f5cfe7 8f5cfe78f5cfe78", "5b876285 b876285b8762 8b876285b8 628b876285b87628",
+        "db8d14edb8d14edb8d14ed b8d14edb8d14edb8d14 edb8d14edb8d14edb8 d14edb8d14edb8d14 edb8d14e", "9913dc49913dc49913dc49913dc499 13dc49913d c49913dc49913dc499 13dc49913dc4991 3dc49913dc4", "e120f96e120f9 6e120f96e120f96 e120f96e120f96e 120f96",
+        "466251b4 66251b466251b466 251b466251b46 6251b466251b466 251b251b251b")
 
-    private val isi = arrayOf("pertanyaan 9",
-        "pertanyaan 11", "pertanyaan 17", "test forum",
-        "pertanyaan 12", "pertanyaan 18", "pertanyaan 20",
-        "pertanyaan 21")
+    private val like = arrayOf("1","20","999","9999","99999","9999999","9999999","99999999")
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private val dislike = arrayOf("1","20","999","9999","99999","9999999","9999999","99999999")
 
-        var itemKode: TextView
-        var itemKategori: TextView
-        var itemIsi: TextView
+//    private val listEvent = arrayListOf<Event>(
+//        Event("a","a","a","a","a","a",10.1,10.1,"123123","asd@gmail.com","https:gogole.com",1),
+//        Event("a","a","a","a","a","a",10.1,10.1,"123123","asd@gmail.com","https:gogole.com",1),
+//        Event("a","a","a","a","a","a",10.1,10.1,"123123","asd@gmail.com","https:gogole.com",1),
+//        Event("a","a","a","a","a","a",10.1,10.1,"123123","asd@gmail.com","https:gogole.com",1)
+//    )
+
+
+    open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        lateinit var tvTitle : TextView
+        lateinit var tvDesc : TextView
+        lateinit var tvLike : TextView
+        lateinit var tvDislike : TextView
+        lateinit var ivPost : ImageView
 
         init {
-            itemKode = itemView.findViewById(R.id.kodePertanyaan)
-            itemKategori = itemView.findViewById(R.id.kategori)
-            itemIsi = itemView.findViewById(R.id.isiPertanyaan)
+            tvTitle = itemView.findViewById(R.id.tvTitle)
+            tvDesc = itemView.findViewById(R.id.tvDesc)
+            tvLike = itemView.findViewById(R.id.tvLike)
+            tvDislike = itemView.findViewById(R.id.tvDislike)
+            ivPost = itemView.findViewById(R.id.ivPost)
 
             itemView.setOnClickListener {
                 var position: Int = bindingAdapterPosition
@@ -61,11 +67,12 @@ public class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(
 //                context.startActivity(intent)
 //                it.findNavController().navigate(R.id.action_recyclerViewItemFragment_to_detailsFragment)
 
-                (itemView.context as AppCompatActivity)
-                    .supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.homeFragment2,PostDetailFragment())
-                    .commit()
+//                (itemView.context as AppCompatActivity)
+//                    .supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.homeFragment2,PostDetailFragment())
+//                    .commit()
+
 //                val fm = (itemView.context as FragmentActivity).supportFragmentManager.findFragmentByTag("asd")
 //                val ft = (itemView.context as FragmentActivity).supportFragmentManager.beginTransaction()
 //                ft.detach(fm!!)
@@ -83,12 +90,13 @@ public class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.itemKode.text = kode[i]
-        viewHolder.itemKategori.text = kategori[i]
-        viewHolder.itemIsi.text = isi[i]
+        viewHolder.tvTitle.text = title[i]
+        viewHolder.tvDesc.text = desc[i]
+        viewHolder.tvLike.text = like[i]
+        viewHolder.tvDislike.text = dislike[i]
     }
 
     override fun getItemCount(): Int {
-        return kode.size
+        return title.size
     }
 }

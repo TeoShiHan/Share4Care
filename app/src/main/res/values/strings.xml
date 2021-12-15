@@ -42,7 +42,7 @@
 
     <!-- Text Headers in Forms -->
     <string name="title">Title</string>
-    <string name="host">Host/Organization Name</string>
+    <string name="host">Host</string>
     <string name="_category">Category</string>
     <string name="description">Description</string>
     <string name="date">Date</string>
@@ -51,6 +51,9 @@
     <string name="contactEmail">Contact Email</string>
     <string name="image">Upload Image</string>
     <string name="create">DONE</string>
+    <string name="externalLink">External Link</string>
+    <string name="attachment">Attachment</string>
+    <string name="tag">Tag</string>
     <string-array name="event_category">
         <item>Charity</item>
         <item>Seminar</item>
@@ -68,6 +71,5 @@
         <item>Accessible Parking Space</item>
         <item>Accessible Public Toilet</item>
     </string-array>
-
 
 </resources>
