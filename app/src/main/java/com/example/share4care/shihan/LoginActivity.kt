@@ -51,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
                     if (inputUserName == s.userName){
                         if(inputPwd == s.password){
                             val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                            intent.putExtra(USERNAME, inputUserName)
                             startActivity(intent)
                         }
                     }
@@ -129,6 +130,9 @@ class LoginActivity : AppCompatActivity() {
         fun onUserBack(s:UserTableRecord)
     }
 
+    companion object{
+        const val USERNAME = "com.example.share4care.USERNAME"
+    }
 
 
 }
