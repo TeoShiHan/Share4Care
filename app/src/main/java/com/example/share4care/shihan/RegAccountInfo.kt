@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.share4care.R
 import com.example.share4care.databinding.FragmentRegAccountInfoBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -20,15 +21,15 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.FirebaseDatabase
 
 class RegAccountInfo : Fragment() {
+
     private lateinit var binding: FragmentRegAccountInfoBinding
+    val args: RegAccountInfoArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
 
     ): View? {
-
-        val userViewModel: UserViewModel by activityViewModels()
         lateinit var accountData: UserAccInfo
         lateinit var personalData: UserPersonalInfo
 
@@ -72,10 +73,14 @@ class RegAccountInfo : Fragment() {
                     binding.regInputPassword.text.toString()
                 )
 
-                userViewModel.personalInformation
+                val userData = userDataAssembling(accountData)
+                val companyData = companyDataAssembling()
 
-                val goToLogin = getIntentToOtherActivity<LoginActivity>(activity as Activity)
-                startActivity(goToLogin)
+                uploadCompanyData(companyData)
+                uploadUserData(userData)
+
+//                val goToLogin = getIntentToOtherActivity<LoginActivity>(activity as Activity)
+//                startActivity(goToLogin)
             }
         }
 
@@ -91,36 +96,47 @@ class RegAccountInfo : Fragment() {
         return binding.root
     }
 
-//    private fun dataAssembling(userViewModel: UserViewModel) {
-//
-//
-//
-//        userViewModel.userTableRecord = userTableRecord
-//
-//
-//        if (companyInformation.companyName != "") {
-//
-//            val companyTableRecord = CompanyTableRecord(
-//                companyInformation.companyName,
-//                companyInformation.tel,
-//                companyInformation.companyEmail,
-//                companyInformation.address
-//            )
-//
-//            userViewModel.companyTableRecord = companyTableRecord
-//
-//            FirebaseDatabase.getInstance()
-//                .getReference("Company")
-//                .child(companyInformation.website)
-//                .setValue(companyTableRecord)
-//
-//            FirebaseDatabase.getInstance()
-//                .getReference("Company")
-//                .child(companyInformation.website)
-//                .child(accountInformation.usernameOrEmail)
-//                .setValue(companyInformation.occupation)
-//        }
-//    }
+    private fun userDataAssembling(accountData: UserAccInfo): UserTableRecord {
+        val userData = UserTableRecord(
+            args.personalInfo.status.toString(),
+            accountData.usernameOrEmail,
+            accountData.password,
+            args.personalInfo.name.toString(),
+            args.personalInfo.gender.toString(),
+            args.personalInfo.DOB.toString(),
+            args.contactInfo.phoneNumber.toString(),
+            args.contactInfo.email.toString(),
+            args.personalInfo.address.toString(),
+            args.personalInfo.isOKU.toString(),
+            args.companyInfo.occupation.toString(),
+            args.companyInfo.companyName.toString(),
+            "Normal user"
+        )
+        return userData
+    }
+
+
+    private fun companyDataAssembling(): CompanyTableRecord {
+        val companyData = CompanyTableRecord(
+            args.companyInfo.companyName.toString(),
+            args.companyInfo.companyEmail.toString(),
+            args.companyInfo.tel.toString(),
+            args.companyInfo.address.toString(),
+            args.companyInfo.website.toString()
+        )
+        return companyData
+    }
+
+    private fun uploadUserData(userRecord :UserTableRecord){
+        FirebaseDatabase.getInstance().getReference("User").child(userRecord.userName).setValue(userRecord)
+    }
+
+    private fun uploadCompanyData(companyRecord :CompanyTableRecord){
+        if (companyRecord.companyName.toString() != ""){
+            FirebaseDatabase.getInstance().getReference("Company").child(companyRecord.companyWebsite).setValue(companyRecord)
+        }
+    }
+
 
 
     private inline fun <reified T : Any> getIntentToOtherActivity(currentActivity: Activity): Intent {

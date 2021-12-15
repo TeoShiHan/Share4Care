@@ -93,12 +93,13 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loadUser(callback: UserCallback, key:String){
         val ref = myUserRef
-        var user = UserTableRecord("", "","","","","","","","","","")
+        var user = UserTableRecord("", "","","","","","","","","","","","")
         val refListener = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     for (c in p0.children) {
                         if (c.child("userName").value.toString() == key){
+                            val status = c.child("status").value.toString()
                             val userName =  c.child("userName").value.toString()
                             val password =  c.child("password").value.toString()
                             val name =  c.child("name").value.toString()
@@ -110,8 +111,9 @@ class LoginActivity : AppCompatActivity() {
                             val isOKU = c.child("isOKU").value.toString()
                             val occupation = c.child("occupation").value.toString()
                             val accountType = c.child("accountType").value.toString()
+                            val companyName = c.child("companyName").value.toString()
 
-                            user = UserTableRecord(userName, password, name, gender, dob, phone, email, address, isOKU, occupation, accountType)
+                            user = UserTableRecord(status, userName, password, name, gender, dob, phone, email, address, isOKU, occupation, companyName, accountType)
                         }
                     }
                     callback.onUserBack(user)

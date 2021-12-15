@@ -9,9 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.share4care.R
 import com.example.share4care.databinding.FragmentRegPersonalInfoBinding
@@ -32,10 +29,12 @@ class RegPersonalInfo : Fragment() {
     ): View? {
         // Variables
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reg_personal_info, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_reg_personal_info, container, false)
+
         val datePicker = getDatePicker()
+
         val fragmentManager = activity?.supportFragmentManager
-        lateinit var personalData: UserPersonalInfo
-        val userViewModel: UserViewModel by viewModels()
 
         // Listeners
         binding.regPersonalToNextPageBtn.setOnClickListener{
@@ -66,25 +65,30 @@ class RegPersonalInfo : Fragment() {
                 lateinit var gender: String
                 if(index==0){ gender= "Male"}else{gender="Female"}
 
-                personalData =
-                UserPersonalInfo(
-                    binding.regPersonalNameInput.text.toString(),
-                    gender,
-                    binding.regPersonalBirthdateInput.text.toString(),
-                    binding.regPersonalAddressInput.text.toString(),
-                    binding.regPersonalIsOkuCheckbox.isChecked.toString()
-                )
+                val personalData =
+                    UserPersonalInfo(
+                        "0",
+                        binding.regPersonalNameInput.text.toString(),
+                        gender,
+                        binding.regPersonalBirthdateInput.text.toString(),
+                        binding.regPersonalAddressInput.text.toString(),
+                        binding.regPersonalIsOkuCheckbox.isChecked.toString()
+                    )
 
+//                val bundle = Bundle()
+//                bundle.putString("key","data")
+//                val fragment = RegContactInfo()
+//                fragment.arguments = bundle
 
-
-                Navigation.findNavController(it).navigate(R.id.action_reg_personal_info_to_reg_contact_info)
+                val action = RegPersonalInfoDirections.actionRegPersonalInfoToRegContactInfo(personalData)
+                Navigation.findNavController(it).navigate(action)
+//                Navigation.findNavController(it).navigate(R.id.action_reg_personal_info_to_reg_contact_info)
             }
         }
 
         binding.calendarForDatePick.setOnClickListener(){
             if (fragmentManager != null) {
                 datePicker.addOnPositiveButtonClickListener {
-                    // Create calendar object and set the date to be that returned from selection
                     val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
                     calendar.time = Date(it)
                     val selectDate = "${calendar.get(Calendar.DAY_OF_MONTH)}-" +
@@ -99,7 +103,6 @@ class RegPersonalInfo : Fragment() {
             val goToLogin = getIntentToOtherActivity<LoginActivity>(activity as Activity)
             startActivity(goToLogin)
         }
-
         return binding.root
     }
 
@@ -110,7 +113,7 @@ class RegPersonalInfo : Fragment() {
         }
         else
             fieldContainer.error=null
-            return false
+        return false
     }
 
     private fun actionValidateAddressField(addressField : EditText, addressFieldContainer: TextInputLayout): Boolean {

@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_reg_contact_info_to_regCompanyInfo"
             app:destination="@id/regCompanyInfo" />
+        <argument
+            android:name="personalInfo"
+            app:argType="com.example.share4care.shihan.UserPersonalInfo" />
     </fragment>
     <fragment
         android:id="@+id/regCompanyInfo"
@@ -37,6 +40,12 @@
         <action
             android:id="@+id/action_regCompanyInfo_to_regAccountInfo"
             app:destination="@id/regAccountInfo" />
+        <argument
+            android:name="contactData"
+            app:argType="com.example.share4care.shihan.UserContactInfo" />
+        <argument
+            android:name="personalData"
+            app:argType="com.example.share4care.shihan.UserPersonalInfo" />
     </fragment>
     <fragment
         android:id="@+id/regAccountInfo"
@@ -46,5 +55,14 @@
         <action
             android:id="@+id/action_regAccountInfo_to_regCompanyInfo"
             app:destination="@id/regCompanyInfo" />
+        <argument
+            android:name="companyInfo"
+            app:argType="com.example.share4care.shihan.UserCompanyInfo" />
+        <argument
+            android:name="contactInfo"
+            app:argType="com.example.share4care.shihan.UserContactInfo" />
+        <argument
+            android:name="personalInfo"
+            app:argType="com.example.share4care.shihan.UserPersonalInfo" />
     </fragment>
 </navigation>

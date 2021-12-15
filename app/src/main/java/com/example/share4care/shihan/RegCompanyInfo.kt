@@ -9,10 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.share4care.R
 import com.example.share4care.databinding.FragmentRegCompanyInfoBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -22,21 +20,19 @@ import com.google.android.material.textfield.TextInputLayout
 class RegCompanyInfo : Fragment() {
 
     private lateinit var binding: FragmentRegCompanyInfoBinding
-
+    val args: RegCompanyInfoArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val userViewModel: UserViewModel by activityViewModels()
         lateinit var companyData: UserCompanyInfo
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reg_company_info, container, false)
 
         binding.regCompanyToNextPageBtn.setOnClickListener(){
-            var invalid : Boolean
-            invalid = actionValidateField(binding.companyNameInput, binding.regCompanyNameInputContainer, "Please enter a company name")
+            var invalid : Boolean = actionValidateField(binding.companyNameInput, binding.regCompanyNameInputContainer, "Please enter a company name")
             if (invalid){return@setOnClickListener}
             invalid = actionValidateEmail(binding.regCompanyEmailInput, binding.regCompanyOccupationContainer)
             if (invalid){return@setOnClickListener}
@@ -58,8 +54,9 @@ class RegCompanyInfo : Fragment() {
                 binding.regSocialMediaInput.text.toString()
             )
 
-//            userViewModel.companyInformation = companyData
-            Navigation.findNavController(it).navigate(R.id.action_regCompanyInfo_to_regAccountInfo)
+            val action = RegCompanyInfoDirections.actionRegCompanyInfoToRegAccountInfo(companyData, args.contactData, args.personalData)
+//          userViewModel.companyInformation = companyData
+            Navigation.findNavController(it).navigate(action)
         }
 
         binding.fromRegCompanyToLogin.setOnClickListener(){
@@ -77,13 +74,14 @@ class RegCompanyInfo : Fragment() {
                 "N/A",
                 "N/A"
             )
-//            userViewModel.companyInformation = companyData
-            Navigation.findNavController(it).navigate(R.id.action_regCompanyInfo_to_regAccountInfo)
+//          userViewModel.companyInformation = companyData
+//          Navigation.findNavController(it).navigate(R.id.action_regCompanyInfo_to_regAccountInfo)
+            val action = RegCompanyInfoDirections.actionRegCompanyInfoToRegAccountInfo(companyData, args.contactData, args.personalData)
+            Navigation.findNavController(it).navigate(action)
         }
 
         return binding.root
     }
-
 
     private fun actionValidateField(field : TextInputEditText, fieldContainer: TextInputLayout, message: String): Boolean{
         if (field.text.toString() == ""){
@@ -204,4 +202,14 @@ class RegCompanyInfo : Fragment() {
     private inline fun <reified T : Any>getIntentToOtherActivity(currentActivity: Activity): Intent {
         return Intent(currentActivity, T::class.java)
     }
+
+//    private fun datAssemblingUser(){
+//        val userTable = UserTableRecord(
+//
+//        )
+//    }
+//
+//    private fun dataAssemblingCompnay(){
+//
+//    }
 }
