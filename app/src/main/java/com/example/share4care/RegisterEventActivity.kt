@@ -91,6 +91,7 @@ class RegisterEventActivity : AppCompatActivity(){
                 binding.emailHeader.error=null
             }
         }
+
         displayDate = binding.actualDate
         displayDate.setOnClickListener(){
             materialDatePicker()
@@ -114,7 +115,6 @@ class RegisterEventActivity : AppCompatActivity(){
 
             if(imgUri!=null){
                 val fileRef = myStorageRef.child(title+host+date+"."+getFileExtension(imgUri!!))
-
                 fileRef.putFile(imgUri!!)
                     .addOnSuccessListener { snapshot ->
                         val result = snapshot.storage.downloadUrl
@@ -145,7 +145,6 @@ class RegisterEventActivity : AppCompatActivity(){
                     }
             }
         }
-
     }
 
     /*private fun showDatePickerDialog(){

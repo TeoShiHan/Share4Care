@@ -103,7 +103,8 @@ class RegAccountInfo : Fragment() {
             args.personalInfo.isOKU.toString(),
             args.companyInfo.occupation.toString(),
             args.companyInfo.companyName.toString(),
-            "Normal user"
+            "Normal",
+            args.contactInfo.imglink.toString()
         )
         return userData
     }
