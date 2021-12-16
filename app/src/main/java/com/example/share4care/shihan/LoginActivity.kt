@@ -68,8 +68,7 @@ class LoginActivity : AppCompatActivity() {
                         val dialog= AlertDialog.Builder(this@LoginActivity)
                                 .setTitle("Select A Type")
                                 .setMessage("Invalid username or password, please try again")
-                                .setNegativeButton("Cancel", null)
-                                .setPositiveButton("Continue", null)
+                                .setPositiveButton("Close", null)
                         dialog.show()
                     }
                 }

@@ -137,7 +137,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        val status = arguments?.getString("status")
+
+        if (status!! =="0"){
+            binding.addButton.visibility = View.GONE
+        }
 
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
