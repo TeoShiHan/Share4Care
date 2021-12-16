@@ -14,10 +14,14 @@ data class Service(
     var contactNumber:String,
     var contactEmail:String,
     var image: String,
-    var status:Int
+    var status:Int,
+    var like: MutableList<String>?,
+    var dislike: MutableList<String>?,
+    var save: MutableList<String>?,
+    var comment: MutableList<UserComment>?
 ):Serializable {
     constructor(title:String, host:String, category:String, description: String, address: String,
                 latitude: Double, longtitude: Double,contactNumber: String, contactEmail: String, imgUrl:String ): this
-        (title, host, category, description, address, latitude, longtitude, contactNumber, contactEmail, imgUrl, 0)
+        (title, host, category, description, address, latitude, longtitude, contactNumber, contactEmail, imgUrl, 0, arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf())
     }
 

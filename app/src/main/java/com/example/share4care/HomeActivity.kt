@@ -7,6 +7,7 @@ import com.example.share4care.databinding.ActivityHomeBinding
 import com.google.android.gms.maps.model.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.example.share4care.ee.CalendarFragment
 import com.example.share4care.ee.HomeFragment
 import com.example.share4care.ee.PostFragment
 import com.example.share4care.ee.ProfileFragment
@@ -18,7 +19,7 @@ class HomeActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var homeFragment: HomeFragment
-    private lateinit var postFragment: PostFragment
+    private lateinit var calendarFragment: CalendarFragment
     private lateinit var profileFragment: ProfileFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +30,7 @@ class HomeActivity : AppCompatActivity(){
 
         val username = intent.getStringExtra(USERNAME)
         homeFragment = HomeFragment()
-        postFragment = PostFragment()
+        calendarFragment = CalendarFragment()
         profileFragment = ProfileFragment()
 
         openFragment(homeFragment, null)
@@ -41,7 +42,7 @@ class HomeActivity : AppCompatActivity(){
                     openFragment(homeFragment, null)
                 }
                 R.id.post_navigation -> {
-                    openFragment(postFragment, null)
+                    openFragment(calendarFragment, null)
                 }
                 R.id.profile_navigation -> {
                     val bundle = bundleOf(Pair("username", username))

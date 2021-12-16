@@ -12,16 +12,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.share4care.R
 import com.example.share4care.contentData.Event
+import com.example.share4care.contentData.Service
+import com.example.share4care.contentData.Travel
+import com.example.share4care.ee.HomeFragment
 
 
-public class EventRecyclerViewAdapter(var eventList: ArrayList<Event>, var clickedItem: ClickedItem) : RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder>(), Filterable {
+public class EventRecyclerViewAdapter(var eventList: ArrayList<Any>, var clickedItem: HomeFragment) : RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder>(), Filterable {
 
-    private var eventImmutableList : ArrayList<Event> = eventList.clone() as ArrayList<Event>
+    private var eventImmutableList : ArrayList<Any> = eventList.clone() as ArrayList<Any>
 
-    fun setData(eventList: ArrayList<Event>){
-        this.eventList = eventList
-        notifyDataSetChanged()
-    }
+//    fun setData(eventList: ArrayList<Event>){
+//        this.eventList = eventList
+//        notifyDataSetChanged()
+//    }
 
     inner class ViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView){
         val tvTitle : TextView = itemView.findViewById(R.id.tvTitle)
@@ -32,7 +35,7 @@ public class EventRecyclerViewAdapter(var eventList: ArrayList<Event>, var click
     }
 
     interface ClickedItem{
-        fun clickedItem(event:Event)
+        fun clickedItem(any: Any)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ViewHolder {
@@ -45,11 +48,48 @@ public class EventRecyclerViewAdapter(var eventList: ArrayList<Event>, var click
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = eventList[position]
 
-        holder.tvTitle.text = currentItem.title
-        holder.tvDesc.text = currentItem.description
-        Glide.with(holder.ivPost.context).load(currentItem.image).into(holder.ivPost)
-        holder.tvLike.text = currentItem.like?.size.toString()
-        holder.tvDislike.text = currentItem.dislike?.size.toString()
+        var title: String? = null
+        var description: String? = null
+        var image: String? = null
+        var like: ArrayList<String> = arrayListOf()
+        var dislike: ArrayList<String> = arrayListOf()
+
+        when(currentItem) {
+            is Event -> {
+                title = currentItem.title
+                description = currentItem.description
+                image = currentItem.image
+                like = currentItem.like as ArrayList<String>
+                dislike = currentItem.dislike as ArrayList<String>
+            }
+            is Service -> {
+                title = currentItem.title
+                description = currentItem.description
+                image = currentItem.image
+                like = currentItem.like as ArrayList<String>
+                dislike = currentItem.dislike as ArrayList<String>
+            }
+            is Travel -> {
+                title = currentItem.title
+                description = currentItem.description
+                image = currentItem.image
+                like = currentItem.like as ArrayList<String>
+                dislike = currentItem.dislike as ArrayList<String>
+            }
+            else -> {
+                title = ""
+                description = ""
+                image = ""
+                like = arrayListOf()
+                dislike = arrayListOf()
+            }
+        }
+
+        holder.tvTitle.text = title
+        holder.tvDesc.text = description
+        Glide.with(holder.ivPost.context).load(image).into(holder.ivPost)
+        holder.tvLike.text = like?.size.toString()
+        holder.tvDislike.text = dislike?.size.toString()
 
         holder.itemView.setOnClickListener(){
             clickedItem.clickedItem(currentItem)
@@ -69,35 +109,60 @@ public class EventRecyclerViewAdapter(var eventList: ArrayList<Event>, var click
                     filterResults.values = eventImmutableList
                 }else{
                     var searchChar : String = p0.toString().lowercase()
-                    var newEventList = ArrayList<Event>()
-                    for(event in eventImmutableList){
-                        Log.d("searchChar",searchChar)
-                        Log.d("event title",event.title)
-                        if(
-                            event.title.lowercase().contains(searchChar) ||
-                            event.description.lowercase().contains(searchChar) ||
-                            event.host.lowercase().contains(searchChar) ||
-                            event.category.lowercase().contains(searchChar)
-                        ){
-                            newEventList.add(event)
+                    var newESTList = ArrayList<Any>()
+                    for(est in eventImmutableList){
+                        var isContains = false
+                        when(est){
+                            is Event -> {
+                                isContains = (
+                                    est.title.lowercase().contains(searchChar) ||
+                                    est.description.lowercase().contains(searchChar) ||
+                                    est.host.lowercase().contains(searchChar) ||
+                                    est.category.lowercase().contains(searchChar)
+                                )
+                            }
+                            is Service -> {
+                                isContains = (
+                                    est.title.lowercase().contains(searchChar) ||
+                                    est.description.lowercase().contains(searchChar) ||
+                                    est.host.lowercase().contains(searchChar) ||
+                                    est.category.lowercase().contains(searchChar)
+                                    )
+                            }
+                            is Travel -> {
+                                isContains = (
+                                    est.title.lowercase().contains(searchChar) ||
+                                    est.description.lowercase().contains(searchChar) ||
+                                    est.host.lowercase().contains(searchChar) ||
+                                    est.category.lowercase().contains(searchChar)
+                                    )
+                            }
+                        }
+
+                        if(isContains){
+                            newESTList.add(est)
                         }
                     }
-                    filterResults.count = newEventList.size
-                    filterResults.values = newEventList
+                    filterResults.count = newESTList.size
+                    filterResults.values = newESTList
                 }
                 return filterResults
             }
 
             override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
-                eventList = p1!!.values as ArrayList<Event>
+                eventList = p1!!.values as ArrayList<Any>
                 notifyDataSetChanged()
             }
 
         }
     }
 
-//    fun updateList(list:MutableList<Event>){
-//        eventList = list
-//        notifyDataSetChanged()
-//    }
+    fun pushToTop(index:Int){
+        val eventItem = eventImmutableList.get(index)
+        val newEventList = eventImmutableList.clone() as ArrayList<Any>
+        newEventList.removeAt(index)
+        newEventList.add(0,eventItem)
+        eventList = newEventList
+        notifyDataSetChanged()
+    }
 }
