@@ -3,10 +3,13 @@ package com.example.share4care
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.share4care.contentData.Event
+import com.example.share4care.contentData.Service
+import com.example.share4care.contentData.Travel
 import com.example.share4care.databinding.ActivityEstBinding
 import com.example.share4care.ee.PostCommentsFragment
 import com.example.share4care.ee.PostDetailsFragment
@@ -20,7 +23,7 @@ class ESTActivity : AppCompatActivity() {
     private lateinit var tabLayout : TabLayout
     private lateinit var viewPager2: ViewPager2
     private lateinit var postAdapter: ViewPagerAdapter
-    private lateinit var eventObj : Event
+    private lateinit var estObj : Any
     private lateinit var detailBundle: Bundle
     private lateinit var commentBundle: Bundle
     private lateinit var postDetailsFragment: PostDetailsFragment
@@ -34,25 +37,81 @@ class ESTActivity : AppCompatActivity() {
         tabLayout = binding.tabs
         viewPager2 = binding.viewpagerContent
 
-        eventObj = intent.getSerializableExtra("eventObj") as Event
+        var title = ""
+        var address = ""
+        var category = ""
+        var contactEmail = ""
+        var contactNumber = ""
+        var date = ""
+        var description = ""
+        var host = ""
+        var image = ""
+        var like = arrayListOf<String>()
+        var dislike = arrayListOf<String>()
+
+        estObj = when(intent.getSerializableExtra("eventObj")){
+            is Event -> {
+                val obj = intent.getSerializableExtra("eventObj") as Event
+                title = obj.title
+                address = obj.address
+                category = obj.category
+                contactEmail = obj.contactEmail
+                contactNumber = obj.contactNumber
+                date = obj.date
+                description = obj.description
+                host = obj.host
+                image = obj.image
+                like = obj.like as ArrayList<String>
+                dislike = obj.dislike as ArrayList<String>
+            }
+            is Service -> {
+                val obj = intent.getSerializableExtra("eventObj") as Service
+                title = obj.title
+                address = obj.address
+                category = obj.category
+                contactEmail = obj.contactEmail
+                contactNumber = obj.contactNumber
+                description = obj.description
+                host = obj.host
+                image = obj.image
+                like = obj.like as ArrayList<String>
+                dislike = obj.dislike as ArrayList<String>
+            }
+            is Travel -> {
+                val obj = intent.getSerializableExtra("eventObj") as Travel
+                title = obj.title
+                address = obj.address
+                category = obj.category
+                contactEmail = obj.contactEmail
+                contactNumber = obj.contactNumber
+                description = obj.description
+                host = obj.host
+                image = obj.image
+                like = obj.like as ArrayList<String>
+                dislike = obj.dislike as ArrayList<String>
+            }
+            else -> intent.getSerializableExtra("eventObj") as Event
+        }
+
+        supportActionBar!!.title = title
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         detailBundle = Bundle()
-        detailBundle.putString("title",eventObj.title)
-        detailBundle.putString("address",eventObj.address)
-        detailBundle.putString("category",eventObj.category)
-        detailBundle.putString("contactEmail",eventObj.contactEmail)
-        detailBundle.putString("contactNumber",eventObj.contactNumber)
-        detailBundle.putString("date",eventObj.date)
-        detailBundle.putString("description",eventObj.description)
-        detailBundle.putString("host",eventObj.host)
-        detailBundle.putString("image",eventObj.image)
-        detailBundle.putInt("like",eventObj.like!!.size)
-        detailBundle.putInt("dislike",eventObj.dislike!!.size)
+        detailBundle.putString("title",title)
+        detailBundle.putString("address",address)
+        detailBundle.putString("category",category)
+        detailBundle.putString("contactEmail",contactEmail)
+        detailBundle.putString("contactNumber",contactNumber)
+        detailBundle.putString("date",date)
+        detailBundle.putString("description",description)
+        detailBundle.putString("host",host)
+        detailBundle.putString("image",image)
+        detailBundle.putInt("like",like!!.size)
+        detailBundle.putInt("dislike",dislike!!.size)
 
 //        commentBundle = Bundle()
 //        detailBundle.putSerializable("eventObj",eventObj)
-        binding.tvTitle.text = eventObj.title
-        Glide.with(binding.imageView.context).load(eventObj.image).into(binding.imageView)
+        Glide.with(binding.imageView.context).load(image).into(binding.imageView)
 
         postAdapter = ViewPagerAdapter(supportFragmentManager,lifecycle)
         postAdapter.setArguments(detailBundle)
@@ -73,5 +132,15 @@ class ESTActivity : AppCompatActivity() {
                 tabLayout.selectTab(tabLayout.getTabAt(position))
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 }

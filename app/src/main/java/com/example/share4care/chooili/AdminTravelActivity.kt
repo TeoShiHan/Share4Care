@@ -141,7 +141,11 @@ class AdminTravelActivity : AppCompatActivity() {
                                 foundLongtitude,
                                 contactNumber,
                                 contactEmail,
-                                image,1
+                                image,1,
+                                arrayListOf(),
+                                arrayListOf(),
+                                arrayListOf(),
+                                arrayListOf()
                             )
 
                             val key = title+host+category

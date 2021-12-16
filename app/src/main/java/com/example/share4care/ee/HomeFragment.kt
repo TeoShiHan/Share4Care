@@ -8,8 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -26,14 +24,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.share4care.*
 import com.example.share4care.R
 import com.example.share4care.contentData.*
-import com.example.share4care.databinding.ActivityHomeBinding
 import com.example.share4care.databinding.FragmentHomeBinding
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -49,8 +43,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.template.androidtemplate.ui.main.EventRecyclerViewAdapter
-import com.template.androidtemplate.ui.main.RecyclerAdapter
-import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -81,10 +73,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     var mapMarkerService: HashMap<String,String> = HashMap<String,String>()
     var mapMarkerTravel: HashMap<String,String> = HashMap<String,String>()
 
-    private lateinit var listEvent: MutableList<Event>
-
+    var listEvent: MutableList<Event> = mutableListOf<Event>()
     var listService = mutableListOf<Service>()
     var listTravel = mutableListOf<Travel>()
+    var listEST = mutableListOf<Any>()
 
 
     var eventData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -168,21 +160,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         loadEvent(object:EventCallback{
             override fun onEventBack(s: MutableList<Event>) {
                 listEvent = s
-                eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEvent),this@HomeFragment)
-                binding.recyclerView.adapter = eventRecyclerViewAdapter
-
+                listEST.addAll(listEvent)
             }
         })
 
         loadService(object:ServiceCallback{
             override fun onServiceBack(s: MutableList<Service>) {
                 listService = s
+                listEST.addAll(listService)
             }
         })
 
         loadTravel(object:TravelCallback{
             override fun onTravelBack(s: MutableList<Travel>) {
                 listTravel = s
+                listEST.addAll(listTravel)
+                eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
+                binding.recyclerView.adapter = eventRecyclerViewAdapter
             }
         })
 
@@ -316,9 +310,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         mBottomSheetBehaviour.state=BottomSheetBehavior.STATE_HALF_EXPANDED
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 15f))
 
-        Log.e("log marker", marker.toString())
-        Log.e("log mapMarkersAll", markersAll.toString())
-        Log.e("log markerID", mapMarkerEvent.get(marker.id).toString())
+        Log.e("log marker title", marker.title.toString())
+        listEST.forEachIndexed { index, est ->
+            val title = when(est){
+                is Event -> est.title
+                is Service -> est.title
+                is Travel -> est.title
+                else -> "Null"
+            }
+            if(marker.title == title){
+                Log.d("log marker position",index.toString())
+                eventRecyclerViewAdapter.pushToTop(index)
+                binding.recyclerView.scrollToPosition(0)
+            }
+        }
 //        val value = mapMarkerEvent.get(marker.id)
 //        Log.d("log value", value!!)
 //        val type = value!!.filter { it.isLetter() }
@@ -463,8 +468,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                         val contactEmail = c.child("contactEmail").value.toString()
                         val image = c.child("image").value.toString()
                         val status = (c.child("status").value as Long).toInt()
+                        val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
+                        val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
+                        val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
+                        val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        list.add(Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status))
+                        list.add(Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
                     }
                     callback.onServiceBack(list)
                 }
@@ -493,8 +502,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                         val contactEmail = c.child("contactEmail").value.toString()
                         val image = c.child("image").value.toString()
                         val status = (c.child("status").value as Long).toInt()
+                        val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
+                        val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
+                        val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
+                        val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        list.add(Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status))
+                        list.add(Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
                     }
                     callback.onTravelBack(list)
                 }
@@ -517,30 +530,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         fun onTravelBack(s:MutableList<Travel>)
     }
 
-    override fun clickedItem(event: Event) {
-        var event1 = event
+    override fun clickedItem(any: Any) {
+        var est = any
         val intent = Intent(context, ESTActivity::class.java)
-        intent.putExtra("eventObj",event1)
-//        intent.apply {
-//            putExtra("event",event1)
-//            putExtra("TITLE", event1.title)
-//            putExtra("HOST", event1.host)
-//            putExtra("CATEGORY", event1.category)
-//            putExtra("DESCRIPTION", event1.description)
-//            putExtra("DATE", event1.date)
-//            putExtra("ADDRESS", event1.address)
-//            putExtra("LATITUDE", event1.latitude)
-//            putExtra("LONGITUDE", event1.longtitude)
-//            putExtra("CONTACTNUMBER", event1.contactNumber)
-//            putExtra("CONTACTEMAIL", event1.contactEmail)
-//            putExtra("IMAGE", event1.image)
-//            putExtra("STATUS", event1.status)
-//            putStringArrayListExtra("LIKE", (event1.like as java.util.ArrayList<String>?))
-//            putStringArrayListExtra("DISLIKE", event1.dislike as java.util.ArrayList<String>?)
-//            putStringArrayListExtra("SAVE", event1.save as java.util.ArrayList<String>?)
-//        }
+        if(est is Event){
+            Log.e("log clickItemEvent",est.title)
+            intent.putExtra("eventObj",est as Event)
+        }else if(est is Service){
+            Log.e("log clickItemService",est.title)
+            intent.putExtra("eventObj",est as Service)
+        }else if(est is Travel){
+            Log.e("log clickItemTravel",est.title)
+            intent.putExtra("eventObj",est as Travel)
+        }
         startActivity(intent)
-        Log.e("eventtt","==>"+event1.title)
     }
 
     companion object{
