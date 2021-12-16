@@ -8,7 +8,7 @@
             android:icon="@drawable/admin_home_icon"
             android:title="Home" />
 
-        <item android:title="Verification">
+        <item android:title="Verification and Deletion">
 
             <menu>
 
@@ -27,26 +27,6 @@
         </item>
     </group>
 
-    <group android:checkableBehavior="single">
-
-        <item android:title="Cleaning">
-
-            <menu>
-                <item
-                    android:id="@+id/admin_delAcc"
-                    android:icon="@drawable/delete_acc"
-                    android:title="Delete Account" />
-
-                <item
-                    android:id="@+id/admin_viewReport"
-                    android:icon="@drawable/view_report"
-                    android:title="View Report" />
-
-            </menu>
-        </item>
-    </group>
-
-
     <item android:title="Content Management">
 
         <menu>
@@ -54,12 +34,8 @@
             <item
                 android:id="@+id/admin_createEST"
                 android:icon="@drawable/create_est"
-                android:title="Create User" />
+                android:title="Create EST" />
 
-            <item
-                android:id="@+id/admin_ESTdetails"
-                android:icon="@drawable/est_details"
-                android:title="EST details" />
 
 
         </menu>
