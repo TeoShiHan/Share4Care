@@ -4,15 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.cardview.widget.CardView
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.share4care.R
 import com.example.share4care.chooili.adapter.User_Adapter
 import com.example.share4care.chooili.model.User
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -23,12 +25,38 @@ class Activity_Verify_User : AppCompatActivity(), User_Adapter.OnItemClickListen
     val database = Firebase.database
     val userRef = database.getReference("User")
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verify_user)
         val userRV: RecyclerView = findViewById(R.id.userRecyclerView)
 
+        val drawerLayout: DrawerLayout = findViewById(R.id.nav_drawer_layout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+
+                R.id.admin_home -> Toast.makeText(
+                    applicationContext,
+                    "Clicked Home",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                R.id.admin_verifyUser
+                -> startActivity(Intent(this, Activity_Verify_User::class.java))
+
+                R.id.admin_verifyEST
+                -> startActivity(Intent(this, Activity_Verify_EST::class.java))
+
+                R.id.admin_createEST
+                -> startActivity(Intent(this, CreateESTActivity::class.java))
+
+
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            //After type true, all error gone
+            true
+        }
         loadUser(object: userCallback {
             override fun onUserBack(s: MutableList<User>) {
                 user =s
@@ -99,5 +127,3 @@ class Activity_Verify_User : AppCompatActivity(), User_Adapter.OnItemClickListen
     interface userCallback {
         fun onUserBack(s: MutableList<User>)}
 }
-
-
