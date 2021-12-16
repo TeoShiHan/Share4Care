@@ -11,26 +11,28 @@ import com.example.share4care.RegisterTravelActivity
 
 class CreateESTActivity : AppCompatActivity() {
 
-    val btnEvent : Button =findViewById(R.id.btnCreateEvent)
-    val btnService : Button =findViewById(R.id.btnCreateService)
-    val btnTravel : Button = findViewById(R.id.btnCreateTravel)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_estactivity)
 
+        val btnEvent : Button =findViewById(R.id.btnCreateEvent)
+        val btnService : Button =findViewById(R.id.btnCreateService)
+        val btnTravel : Button = findViewById(R.id.btnCreateTravel)
+
+
         btnEvent.setOnClickListener(){
-            val intent = Intent(this, RegisterEventActivity::class.java)
+            val intent = Intent(this, AdminEventActivity::class.java)
             startActivity(intent)
         }
 
         btnService.setOnClickListener(){
-            val intent = Intent(this, RegisterServiceActivity::class.java)
+            val intent = Intent(this, AdminServiceActivity::class.java)
             startActivity(intent)
         }
 
         btnTravel.setOnClickListener(){
-            val intent = Intent(this, RegisterTravelActivity::class.java)
+            val intent = Intent(this, AdminTravelActivity::class.java)
             startActivity(intent)
         }
 

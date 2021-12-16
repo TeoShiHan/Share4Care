@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodSession
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,33 @@ class Activity_Verify_EST : AppCompatActivity(),  EST_Adapter.OnItemClickListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verify_est)
         val estRV: RecyclerView = findViewById(R.id.estRecyclerView)
+        val drawerLayout: DrawerLayout = findViewById(R.id.nav_drawer_layout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+
+                R.id.admin_home -> Toast.makeText(
+                    applicationContext,
+                    "Clicked Home",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                R.id.admin_verifyUser
+                -> startActivity(Intent(this, Activity_Verify_User::class.java))
+
+                R.id.admin_verifyEST
+                -> startActivity(Intent(this, Activity_Verify_EST::class.java))
+
+                R.id.admin_createEST
+                -> startActivity(Intent(this, CreateESTActivity::class.java))
+
+
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            //After type true, all error gone
+            true
+        }
 
         loadEvent(object:EventCallback{
             override fun onEventBack(s: MutableList<EST>) {
@@ -70,7 +98,6 @@ class Activity_Verify_EST : AppCompatActivity(),  EST_Adapter.OnItemClickListene
 
             }
         },0)
-
 
     }
 

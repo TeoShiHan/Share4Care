@@ -91,7 +91,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/tvOku"
+            android:id="@+id/tvOKU"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/oku"

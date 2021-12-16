@@ -5,7 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.example.share4care.R
+import com.example.share4care.chooili.model.User
 import com.example.share4care.databinding.FragmentProfileBinding
 import com.example.share4care.shihan.UserTableRecord
 import com.google.firebase.database.DataSnapshot
@@ -19,6 +23,7 @@ class ProfileFragment : Fragment() {
     private lateinit var binding:FragmentProfileBinding
     val database = Firebase.database
     val myUserRef = database.getReference("User")
+    private lateinit var img:ImageView
 
 
     override fun onCreateView(
@@ -29,9 +34,24 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         val username = arguments?.getString("username")
+
+        img = binding.imgUser
         loadUser(object: UserCallback{
             override fun onUserBack(s: UserTableRecord) {
+                binding.tvName.text  = s.userName
+                binding.tvBirthday.text = s.dob
+                binding.tvAddress.text = s.address
+                binding.tvPhone.text = s.phone
+                binding.tvEmail.text = s.email
+                if (s.status == "0"){
+                    binding.tvStatus.text = "Unverified User"
+                } else {
+                    binding.tvStatus.text = "Verified User"
+                }
 
+                if(s.imageLink != ""){
+                    Glide.with(img.context).load(s.imageLink).into(img)
+                }
             }
         }, username!!)
 

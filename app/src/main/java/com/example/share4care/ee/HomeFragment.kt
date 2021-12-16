@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
@@ -85,14 +86,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             val data = result.data
             addedEvent=data?.getSerializableExtra(EVENT) as Event
             listEvent.add(addedEvent)
-            val latlng=LatLng(addedEvent.latitude, addedEvent.longtitude)
+            /*val latlng=LatLng(addedEvent.latitude, addedEvent.longtitude)
             val newMarker = mMap.addMarker(MarkerOptions()
                 .position(latlng)
                 .title(addedEvent.title)
                 .snippet(addedEvent.description)
                 .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.ic_map_pin_filled_orange_48dp,R.drawable.baseline_event_20)))
             markersAll.add(newMarker!!)
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))*/
         }
     }
 
@@ -102,14 +103,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             val data = result.data
             val addedService=data?.getSerializableExtra(SERVICE) as Service
             listService.add(addedService)
-            val latlng=LatLng(addedService.latitude, addedService.longtitude)
+            /*val latlng=LatLng(addedService.latitude, addedService.longtitude)
             val newMarker = mMap.addMarker(MarkerOptions()
                 .position(latlng)
                 .title(addedService.title)
                 .snippet(addedService.description)
                 .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.ic_map_pin_filled_blue_48dp,R.drawable.baseline_miscellaneous_services_20)))
             markersAll.add(newMarker!!)
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))*/
 
         }
     }
@@ -120,14 +121,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             val data = result.data
             val addedTravel=data?.getSerializableExtra(TRAVEL) as Travel
             listTravel.add(addedTravel)
-            val latlng=LatLng(addedTravel.latitude, addedTravel.longtitude)
+            /*val latlng=LatLng(addedTravel.latitude, addedTravel.longtitude)
             val newMarker = mMap.addMarker(MarkerOptions()
                 .position(latlng)
                 .title(addedTravel.title)
                 .snippet(addedTravel.description)
                 .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.ic_map_pin_filled_green_48dp,R.drawable.baseline_accessible_20)))
             markersAll.add(newMarker!!)
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latlng))*/
 
         }
     }
@@ -169,14 +170,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 listEvent = s
                 listEST.addAll(listEvent)
             }
-        })
+        }, 1)
 
         loadService(object:ServiceCallback{
             override fun onServiceBack(s: MutableList<Service>) {
                 listService = s
                 listEST.addAll(listService)
             }
-        })
+        }, 1)
 
         loadTravel(object:TravelCallback{
             override fun onTravelBack(s: MutableList<Travel>) {
@@ -185,7 +186,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
                 binding.recyclerView.adapter = eventRecyclerViewAdapter
             }
-        })
+        }, 1)
 
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_choose_type, null)
@@ -355,21 +356,32 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             getLocationUpdates()
             startLocationUpdates()
         } else {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), 1)
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==1){
-            if (grantResults.contains(PackageManager.PERMISSION_GRANTED)){
-                getLocationAccess()
-            } else {
-                Toast.makeText(requireContext(),
-                    "User did not grant location access permission",
-                    Toast.LENGTH_LONG).show()
-                activity?.finish()
-            }
+    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    if(requestCode==1){
+        if (grantResults.contains(PackageManager.PERMISSION_GRANTED)){
+            getLocationAccess()
+        } else {
+            Toast.makeText(requireContext(),
+                "User did not grant location access permission",
+                Toast.LENGTH_LONG).show()
+            activity?.finish()
+        }
+    }
+}*/
+
+    val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){ result ->
+        if (result){
+            getLocationAccess()
+        } else {
+            Toast.makeText(requireContext(),
+                "User did not grant location access permission",
+                Toast.LENGTH_LONG).show()
+            activity?.finish()
         }
     }
 
@@ -378,7 +390,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
         } else {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            //requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), 1)
         }
     }
 
@@ -420,33 +433,34 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
-    private fun loadEvent(callback: EventCallback){
+    private fun loadEvent(callback: EventCallback, key:Int){
         val ref = myEventRef
         val refListener = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 val list = mutableListOf<Event>()
                 if (p0.exists()) {
                     for (c in p0.children) {
-                        val title =  c.child("title").value.toString()
-                        val host =  c.child("host").value.toString()
-                        val category =  c.child("category").value.toString()
-                        val description = c.child("description").value.toString()
-                        val date = c.child("date").value.toString()
-                        val address = c.child("address").value.toString()
-                        val latitude = c.child("latitude").value as Double
-                        val longtitude = c.child("longtitude").value as Double
-                        val contactNumber = c.child("contactNumber").value.toString()
-                        val contactEmail = c.child("contactEmail").value.toString()
-                        val image = c.child("image").value.toString()
-                        val status = (c.child("status").value as Long).toInt()
-                        val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
-                        val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
-                        val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
-                        val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
+                        if ((c.child("status").value as Long).toInt() == key){
+                            val title =  c.child("title").value.toString()
+                            val host =  c.child("host").value.toString()
+                            val category =  c.child("category").value.toString()
+                            val description = c.child("description").value.toString()
+                            val date = c.child("date").value.toString()
+                            val address = c.child("address").value.toString()
+                            val latitude = c.child("latitude").value as Double
+                            val longtitude = c.child("longtitude").value as Double
+                            val contactNumber = c.child("contactNumber").value.toString()
+                            val contactEmail = c.child("contactEmail").value.toString()
+                            val image = c.child("image").value.toString()
+                            val status = (c.child("status").value as Long).toInt()
+                            val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
+                            val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
+                            val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
+                            val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        list.add(Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                            list.add(Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                        }
                     }
-
 //                    Log.d("log event list", list.toString())
                     callback.onEventBack(list)
                 }
@@ -457,30 +471,32 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         ref.addValueEventListener(refListener)
     }
 
-    private fun loadService(callback: ServiceCallback){
+    private fun loadService(callback: ServiceCallback, key:Int){
         val ref = myServiceRef
         val refListener = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 val list = mutableListOf<Service>()
                 if (p0.exists()) {
                     for (c in p0.children) {
-                        val title =  c.child("title").value.toString()
-                        val host =  c.child("host").value.toString()
-                        val category =  c.child("category").value.toString()
-                        val description = c.child("description").value.toString()
-                        val address = c.child("address").value.toString()
-                        val latitude = c.child("latitude").value as Double
-                        val longtitude = c.child("longtitude").value as Double
-                        val contactNumber = c.child("contactNumber").value.toString()
-                        val contactEmail = c.child("contactEmail").value.toString()
-                        val image = c.child("image").value.toString()
-                        val status = (c.child("status").value as Long).toInt()
-                        val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
-                        val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
-                        val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
-                        val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
+                        if ((c.child("status").value as Long).toInt() == key){
+                            val title =  c.child("title").value.toString()
+                            val host =  c.child("host").value.toString()
+                            val category =  c.child("category").value.toString()
+                            val description = c.child("description").value.toString()
+                            val address = c.child("address").value.toString()
+                            val latitude = c.child("latitude").value as Double
+                            val longtitude = c.child("longtitude").value as Double
+                            val contactNumber = c.child("contactNumber").value.toString()
+                            val contactEmail = c.child("contactEmail").value.toString()
+                            val image = c.child("image").value.toString()
+                            val status = (c.child("status").value as Long).toInt()
+                            val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
+                            val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
+                            val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
+                            val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        list.add(Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                            list.add(Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                        }
                     }
                     callback.onServiceBack(list)
                 }
@@ -491,30 +507,33 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         ref.addValueEventListener(refListener)
     }
 
-    private fun loadTravel(callback: TravelCallback){
+    private fun loadTravel(callback: TravelCallback, key:Int){
         val ref = myTravelRef
         val refListener = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 val list = mutableListOf<Travel>()
                 if (p0.exists()) {
                     for (c in p0.children) {
-                        val title =  c.child("title").value.toString()
-                        val host =  c.child("host").value.toString()
-                        val category =  c.child("category").value.toString()
-                        val description = c.child("description").value.toString()
-                        val address = c.child("address").value.toString()
-                        val latitude = c.child("latitude").value as Double
-                        val longtitude = c.child("longtitude").value as Double
-                        val contactNumber = c.child("contactNumber").value.toString()
-                        val contactEmail = c.child("contactEmail").value.toString()
-                        val image = c.child("image").value.toString()
-                        val status = (c.child("status").value as Long).toInt()
-                        val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
-                        val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
-                        val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
-                        val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
+                        if ((c.child("status").value as Long).toInt() == key){
+                            val title =  c.child("title").value.toString()
+                            val host =  c.child("host").value.toString()
+                            val category =  c.child("category").value.toString()
+                            val description = c.child("description").value.toString()
+                            val address = c.child("address").value.toString()
+                            val latitude = c.child("latitude").value as Double
+                            val longtitude = c.child("longtitude").value as Double
+                            val contactNumber = c.child("contactNumber").value.toString()
+                            val contactEmail = c.child("contactEmail").value.toString()
+                            val image = c.child("image").value.toString()
+                            val status = (c.child("status").value as Long).toInt()
+                            val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
+                            val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
+                            val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
+                            val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        list.add(Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                            list.add(Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+
+                        }
                     }
                     callback.onTravelBack(list)
                 }

@@ -1,9 +1,14 @@
 package com.example.share4care.chooili
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import com.example.share4care.R
 import com.example.share4care.chooili.model.User
 import com.google.firebase.database.ktx.database
@@ -25,9 +30,11 @@ class Activity_About_Us : AppCompatActivity() {
         findViewById<TextView>(R.id.tvName).text = user.userName
         findViewById<TextView>(R.id.tvBirthday).text = user.userDOB
         findViewById<TextView>(R.id.tvAddress).text = user.userAddress
-        findViewById<TextView>(R.id.tvPhone).text = user.userPhone
-        findViewById<TextView>(R.id.tvEmail).text = user.userEmail
-        findViewById<TextView>(R.id.tvOku).text = user.userIsOKU
+        val tvEmail: TextView =findViewById(R.id.tvEmail)
+        tvEmail.text = user.userPhone
+        val tvPhone: TextView =findViewById(R.id.tvPhone)
+        tvPhone.text = user.userEmail
+        findViewById<TextView>(R.id.tvOKU).text = user.userIsOKU
 
         val btnVerify : Button =  findViewById<Button>(R.id.btnVerify)
         val btnDelete : Button =  findViewById<Button>(R.id.btnDelete)
@@ -45,6 +52,25 @@ class Activity_About_Us : AppCompatActivity() {
             val key1 = user.userName
             userRef.child(key1).removeValue()
 
+        }
+
+        tvEmail.setOnClickListener() {
+
+            val intent = Intent(Intent.ACTION_SENDTO)
+            intent.data = Uri.parse("mailto:"+user.userEmail)
+            intent.putExtra(Intent.EXTRA_SUBJECT,"Inquiry:")
+            startActivity (intent)
+        }
+
+
+        tvPhone.setOnClickListener() {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
+                val intent = Intent(Intent.ACTION_CALL)
+                intent.data = Uri.parse("tel:"+user.userPhone)
+                startActivity (intent)
+            }else {
+                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CALL_PHONE), 1)
+            }
         }
 
     }
