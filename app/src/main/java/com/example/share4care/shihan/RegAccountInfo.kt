@@ -3,27 +3,23 @@ package com.example.share4care.shihan
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.share4care.R
 import com.example.share4care.databinding.FragmentRegAccountInfoBinding
+import com.example.share4care.shihan.*
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.FirebaseDatabase
 
 class RegAccountInfo : Fragment() {
-
     private lateinit var binding: FragmentRegAccountInfoBinding
-    val args: RegAccountInfoArgs by navArgs()
+    private val args: RegAccountInfoArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +27,6 @@ class RegAccountInfo : Fragment() {
 
     ): View? {
         lateinit var accountData: UserAccInfo
-        lateinit var personalData: UserPersonalInfo
 
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_reg_account_info, container, false)
@@ -42,46 +37,44 @@ class RegAccountInfo : Fragment() {
                 binding.regAccUsernameContainer,
                 "Please enter a username"
             )
-            if (isInvalid) {
-                return@setOnClickListener
-            }
+            if (isInvalid) { return@setOnClickListener }
+
             isInvalid = actionValidateField(
                 binding.regInputPassword,
                 binding.regAccPasswordContainer,
                 "Please enter a password"
             )
-            if (isInvalid) {
-                return@setOnClickListener
-            }
+
+            if (isInvalid) { return@setOnClickListener }
+
             isInvalid = actionValidateField(
                 binding.regInputPasswordConfirm,
                 binding.containerConfirmPasswordInput,
                 "Please input a password"
             )
-            if (isInvalid) {
-                return@setOnClickListener
-            }
+
+            if (isInvalid) { return@setOnClickListener }
+
             val password1 = binding.regInputPassword.text.toString()
             val password2 = binding.regInputPasswordConfirm.text.toString()
+
             if (password1 != password2) {
                 binding.containerConfirmPasswordInput.error = "Password not match"
                 binding.regInputPassword.error = "Password not match"
-            } else {
-
-                accountData = UserAccInfo(
-                    binding.regInputEmailUsername.text.toString(),
-                    binding.regInputPassword.text.toString()
-                )
-
-                val userData = userDataAssembling(accountData)
-                val companyData = companyDataAssembling()
-
-                uploadCompanyData(companyData)
-                uploadUserData(userData)
-
-//                val goToLogin = getIntentToOtherActivity<LoginActivity>(activity as Activity)
-//                startActivity(goToLogin)
             }
+
+            accountData = UserAccInfo(
+                binding.regInputEmailUsername.text.toString(),
+                binding.regInputPassword.text.toString()
+            )
+            val userData = userDataAssembling(accountData)
+            val companyData = companyDataAssembling()
+
+            uploadCompanyData(companyData)
+            uploadUserData(userData)
+
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
         }
 
         binding.regAccToPrevPage.setOnClickListener() {
@@ -110,11 +103,11 @@ class RegAccountInfo : Fragment() {
             args.personalInfo.isOKU.toString(),
             args.companyInfo.occupation.toString(),
             args.companyInfo.companyName.toString(),
-            "Normal user"
+            "Normal",
+            args.contactInfo.imglink.toString()
         )
         return userData
     }
-
 
     private fun companyDataAssembling(): CompanyTableRecord {
         val companyData = CompanyTableRecord(
@@ -127,27 +120,21 @@ class RegAccountInfo : Fragment() {
         return companyData
     }
 
-    private fun uploadUserData(userRecord :UserTableRecord){
+    private fun uploadUserData(userRecord : UserTableRecord){
         FirebaseDatabase.getInstance().getReference("User").child(userRecord.userName).setValue(userRecord)
     }
 
-    private fun uploadCompanyData(companyRecord :CompanyTableRecord){
+    private fun uploadCompanyData(companyRecord : CompanyTableRecord){
         if (companyRecord.companyName.toString() != ""){
             FirebaseDatabase.getInstance().getReference("Company").child(companyRecord.companyWebsite).setValue(companyRecord)
         }
     }
 
-
-
     private inline fun <reified T : Any> getIntentToOtherActivity(currentActivity: Activity): Intent {
         return Intent(currentActivity, T::class.java)
     }
 
-    private fun actionValidateField(
-        field: TextInputEditText,
-        fieldContainer: TextInputLayout,
-        message: String
-    ): Boolean {
+    private fun actionValidateField(field: TextInputEditText, fieldContainer: TextInputLayout, message: String): Boolean {
         if (field.text.toString() == "") {
             fieldContainer.error = message
             return true

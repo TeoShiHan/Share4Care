@@ -20,6 +20,7 @@ import java.io.IOException
 import java.util.*
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
+import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.*
@@ -60,6 +61,9 @@ class RegisterServiceActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         imgView = findViewById(R.id.actualImage)
+
+        supportActionBar!!.title = "Register Service"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val items = resources.getStringArray(R.array.service_category)
         val adapter = ArrayAdapter(this, R.layout.list_item, items)
@@ -142,7 +146,7 @@ class RegisterServiceActivity : AppCompatActivity() {
                                 image
                             )
 
-                            val key = title
+                            val key = title+host+category
 
                             myDatabaseRef.child(key).setValue(newService)
                                 .addOnSuccessListener {
@@ -214,6 +218,14 @@ class RegisterServiceActivity : AppCompatActivity() {
         return BitmapDrawable(resources,bitmap)
     }
 
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
 
 }

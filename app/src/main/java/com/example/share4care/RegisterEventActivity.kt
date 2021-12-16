@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.*
@@ -65,6 +66,9 @@ class RegisterEventActivity : AppCompatActivity(){
 
         imgView = findViewById(R.id.actualImage)
 
+        supportActionBar!!.title = "Register Event"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         val items = resources.getStringArray(R.array.event_category)
         val adapter = ArrayAdapter(this, R.layout.list_item, items)
         binding.actualCategory.setAdapter(adapter)
@@ -91,6 +95,7 @@ class RegisterEventActivity : AppCompatActivity(){
                 binding.emailHeader.error=null
             }
         }
+
         displayDate = binding.actualDate
         displayDate.setOnClickListener(){
             materialDatePicker()
@@ -114,7 +119,6 @@ class RegisterEventActivity : AppCompatActivity(){
 
             if(imgUri!=null){
                 val fileRef = myStorageRef.child(title+host+date+"."+getFileExtension(imgUri!!))
-
                 fileRef.putFile(imgUri!!)
                     .addOnSuccessListener { snapshot ->
                         val result = snapshot.storage.downloadUrl
@@ -123,7 +127,7 @@ class RegisterEventActivity : AppCompatActivity(){
                             image = it.toString()
                             val newEvent = Event(title, host, category, description, date, originalAddress, foundLatitude, foundLongtitude, contactNumber, contactEmail, image)
 
-                            val key = title
+                            val key = title+host+date
 
                             myDatabaseRef.child(key).setValue(newEvent)
                                 .addOnSuccessListener {
@@ -145,7 +149,6 @@ class RegisterEventActivity : AppCompatActivity(){
                     }
             }
         }
-
     }
 
     /*private fun showDatePickerDialog(){
@@ -207,6 +210,16 @@ class RegisterEventActivity : AppCompatActivity(){
 
     fun bitmapToDrawable(bitmap: Bitmap): BitmapDrawable {
         return BitmapDrawable(resources,bitmap)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
 }

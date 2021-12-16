@@ -2,6 +2,7 @@ package com.example.share4care
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import com.example.share4care.databinding.ActivityHomeBinding
 import com.google.android.gms.maps.model.*
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import com.example.share4care.ee.CalendarFragment
 import com.example.share4care.ee.HomeFragment
 import com.example.share4care.ee.PostFragment
 import com.example.share4care.ee.ProfileFragment
+import com.example.share4care.shihan.LoginActivity.Companion.USERNAME
 import com.google.android.gms.location.*
 
 
@@ -26,26 +28,28 @@ class HomeActivity : AppCompatActivity(){
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val username = intent.getStringExtra(USERNAME)
         homeFragment = HomeFragment()
         calendarFragment = CalendarFragment()
         profileFragment = ProfileFragment()
 
-        openFragment(homeFragment)
+        openFragment(homeFragment, null)
 
         binding.bottomNavigation.setOnItemSelectedListener OnItemSelectedListener@{
                 item ->
             when(item.itemId){
                 R.id.home_navigation -> {
-                    openFragment(homeFragment)
+                    openFragment(homeFragment, null)
                 }
                 R.id.post_navigation -> {
-                    openFragment(calendarFragment)
+                    openFragment(calendarFragment, null)
                 }
                 R.id.profile_navigation -> {
-                    openFragment(profileFragment)
+                    val bundle = bundleOf(Pair("username", username))
+                    openFragment(profileFragment,bundle)
                 }
                 else -> {
-                    openFragment(homeFragment)
+                    openFragment(homeFragment, null)
                 }
             }
 
@@ -54,8 +58,9 @@ class HomeActivity : AppCompatActivity(){
 
     }
 
-    private fun openFragment(fragment: Fragment){
+    private fun openFragment(fragment: Fragment, bundle: Bundle?){
         val fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        fragment.arguments = bundle
         fragmentTransaction.replace(R.id.fragment_container,fragment)
         fragmentTransaction.commit();
     }

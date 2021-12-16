@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:padding="20dp"
+    android:layout_margin="20dp"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/estTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:layout_marginTop="20dp"
+        android:text="Title"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tfTitle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/estHost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:text="Host"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tfHost"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/estDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:text="Description"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tfDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/estDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:text="Date"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tfDate"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/estContactNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:text="Contact Number"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tfContactNo"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/estEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:text="Email"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tfEmail"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/estCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:text="Category"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tfCategory"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/estAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:text="Address"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tfAddress"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:paddingLeft="12dp"
+        android:textColor="@color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnESTVerify"
+            android:layout_width="101dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="20dp"
+            android:text="Verify"
+            app:backgroundTint="#FF9800"
+            app:cornerRadius="50dp" />
+
+        <Button
+
+            android:id="@+id/btnESTDelete"
+            android:layout_width="101dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Delete"
+            app:backgroundTint="#FF9800"
+            app:cornerRadius="50dp" />
+
+
+    </LinearLayout>
+</LinearLayout>

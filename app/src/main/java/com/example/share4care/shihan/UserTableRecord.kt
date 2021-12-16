@@ -13,5 +13,6 @@ data class UserTableRecord(
     val isOKU: String,
     val occupation: String,
     val companyName: String,
-    val accountType: String
+    val accountType: String,
+    val imageLink: String
 )
