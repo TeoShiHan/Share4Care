@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.android.example.try_admin1.R
-import com.android.example.try_admin1.models.User
+import com.example.share4care.R
+import com.example.share4care.chooili.model.User
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 

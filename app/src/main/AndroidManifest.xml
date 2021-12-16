@@ -49,7 +49,10 @@
         <activity
             android:name=".chooili.Activity_About_Us"
             android:exported="false" />
-
+        <activity
+            android:name=".chooili.AdminHome"
+            android:theme="@style/Theme.Share4Care.NoActionBar"
+            android:exported="false" />
         <activity
             android:name=".shihan.LoginActivity"
             android:theme="@style/Theme.Share4Care.NoActionBar"
