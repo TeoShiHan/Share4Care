@@ -2,15 +2,19 @@ package com.example.share4care.shihan.roomData
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
 
-    private val readAllData: LiveData<List<User>>
+    val readAllData: LiveData<List<User>>
     private val repository: UserRepository
+    var userTable: List<User>? = null
+
 
     init {
         val userDao = UserDatabase.getDatabase(application).userDao()
@@ -23,4 +27,17 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             repository.addUser(user)
         }
     }
+
+    private fun letDataFlowFromDatabaseToGlobalVariable(owner: LifecycleOwner){
+        readAllData.observe(owner, Observer {
+                data -> userTable = data
+        })
+    }
+
+    fun fetchUserTableData(owner: LifecycleOwner): List<User>? {
+        letDataFlowFromDatabaseToGlobalVariable(owner)
+        return userTable
+    }
+
+
 }

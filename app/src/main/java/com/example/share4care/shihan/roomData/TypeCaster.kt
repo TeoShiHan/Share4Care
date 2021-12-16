@@ -1,5 +1,8 @@
 package com.example.share4care.shihan.roomData
 
+import android.content.Context
+import android.net.ConnectivityManager
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.share4care.contentData.Event
 import com.example.share4care.contentData.Service
 import com.example.share4care.contentData.Travel
@@ -51,4 +54,5 @@ class TypeCaster {
             service.status
         )
     }
+
 }

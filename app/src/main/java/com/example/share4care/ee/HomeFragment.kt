@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -24,6 +26,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.share4care.*
 import com.example.share4care.R
@@ -74,6 +78,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     val myServiceRef= database.getReference("Services")
     val myTravelRef = database.getReference("Travels")
     val myStorageRef = FirebaseStorage.getInstance().getReference("images")
+
 
     var markersAll = mutableListOf<Marker>()
     var mapMarkerEvent: HashMap<String,String> = HashMap<String,String>()
@@ -144,6 +149,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+        // Initialize the room db
+        // initialize room db
+        eventdb = ViewModelProvider(this)[EventViewModel::class.java]
+        servicedb = ViewModelProvider(this)[ServiceViewModel::class.java]
+        traveldb = ViewModelProvider(this)[TravelViewModel::class.java]
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -581,5 +592,22 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         const val EVENT = "com.example.share4care.EVENT"
         const val SERVICE = "com.example.share4care.SERVICE"
         const val TRAVEL = "com.example.share4care.TRAVEL"
+    }
+
+
+    fun isConnectedToWifi(): Boolean {
+        val context = activity?.applicationContext
+        val connectivity: ConnectivityManager? = null
+        var info: NetworkInfo? = null
+
+        val networkManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE)
+        val isConnectedWifi = connectivity?.activeNetworkInfo
+
+        if (isConnectedWifi != null && isConnectedWifi.state == NetworkInfo.State.CONNECTED){
+            return true
+        }else{
+            Toast.makeText(context, "wifi not turned on, showing local data", Toast.LENGTH_SHORT).show()
+            return false
+        }
     }
 }
