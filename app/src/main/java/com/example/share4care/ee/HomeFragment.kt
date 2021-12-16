@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.share4care.*
@@ -132,6 +134,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         }
     }
+
+    val requestPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permissions ->
+        permissions.entries.forEach{
+            Log.d("DEBUG", "${it.key} = ${it.value}")
+        }
+        if (permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true && permissions[android.Manifest.permission.ACCESS_COARSE_LOCATION] == true){
+            getLocationAccess()
+        } else {
+            Toast.makeText(requireContext(),
+                "User did not grant location access permission",
+                Toast.LENGTH_LONG).show()
+            activity?.finish()
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -350,48 +367,38 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun getLocationAccess(){
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.isMyLocationEnabled = true
             getLocationUpdates()
             startLocationUpdates()
         } else {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+            requestPermission.launch(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION))
         }
     }
 
     /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    if(requestCode==1){
-        if (grantResults.contains(PackageManager.PERMISSION_GRANTED)){
-            getLocationAccess()
-        } else {
-            Toast.makeText(requireContext(),
-                "User did not grant location access permission",
-                Toast.LENGTH_LONG).show()
-            activity?.finish()
-        }
-    }
-}*/
 
-    val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){ result ->
-        if (result){
-            getLocationAccess()
-        } else {
-            Toast.makeText(requireContext(),
-                "User did not grant location access permission",
-                Toast.LENGTH_LONG).show()
-            activity?.finish()
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==1){
+            if (grantResults.contains(PackageManager.PERMISSION_GRANTED)){
+                getLocationAccess()
+            } else {
+                Toast.makeText(requireContext(),
+                    "User did not grant location access permission",
+                    Toast.LENGTH_LONG).show()
+                activity?.finish()
+            }
         }
-    }
+    }*/
 
     private fun startLocationUpdates(){
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
         } else {
             //requestPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+            requestPermission.launch(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION))
         }
     }
 

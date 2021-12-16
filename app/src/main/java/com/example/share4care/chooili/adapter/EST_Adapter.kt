@@ -93,16 +93,17 @@ class EST_Adapter(private var ESTList: List<EST>, private val listener: OnItemCl
             }, myEventRef, key1)
         }
         holder.btnDelete.setOnClickListener{
-            updateEST(object:UpdateCallback{
-                override fun onUpdateBack(s: Boolean) {
+            deleteEST(object:DeleteCallback{
+                override fun onDeleteBack(s: Boolean) {
                     if (!s){
-                        updateEST(object :UpdateCallback{
-                            override fun onUpdateBack(s: Boolean) {
-                                if (!s)
-                                    updateEST(object :UpdateCallback{
-                                        override fun onUpdateBack(s: Boolean) {
+                        deleteEST(object :DeleteCallback{
+                            override fun onDeleteBack(s: Boolean) {
+                                if (!s){
+                                    deleteEST(object :DeleteCallback{
+                                        override fun onDeleteBack(s: Boolean) {
                                         }
                                     }, myTravelRef, key2)
+                                }
                             }
                         }, myServiceRef, key2)
                     }
@@ -122,7 +123,7 @@ class EST_Adapter(private var ESTList: List<EST>, private val listener: OnItemCl
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     for (c in p0.children) {
-                        if (c.value == key1) {
+                        if (c.key.toString() == key1) {
                             val verify = HashMap<String, Any>()
                             verify.put("status", 1)
                             myRef.child(key1).updateChildren(verify)
@@ -144,7 +145,7 @@ class EST_Adapter(private var ESTList: List<EST>, private val listener: OnItemCl
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     for (c in p0.children) {
-                        if (c.value == key1) {
+                        if (c.key.toString() == key1) {
                             myRef.child(key1).removeValue()
                             updated = true
                         }
