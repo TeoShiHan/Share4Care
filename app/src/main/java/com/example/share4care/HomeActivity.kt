@@ -11,6 +11,7 @@ import com.example.share4care.ee.CalendarFragment
 import com.example.share4care.ee.HomeFragment
 import com.example.share4care.ee.PostFragment
 import com.example.share4care.ee.ProfileFragment
+import com.example.share4care.shihan.LoginActivity.Companion.STATUS
 import com.example.share4care.shihan.LoginActivity.Companion.USERNAME
 import com.google.android.gms.location.*
 
@@ -29,17 +30,19 @@ class HomeActivity : AppCompatActivity(){
         setContentView(binding.root)
 
         val username = intent.getStringExtra(USERNAME)
+        val status = intent.getStringExtra(STATUS)
         homeFragment = HomeFragment()
         calendarFragment = CalendarFragment()
         profileFragment = ProfileFragment()
 
-        openFragment(homeFragment, null)
+        val bundleStatus = bundleOf(Pair("status", status))
+        openFragment(homeFragment, bundleStatus)
 
         binding.bottomNavigation.setOnItemSelectedListener OnItemSelectedListener@{
                 item ->
             when(item.itemId){
                 R.id.home_navigation -> {
-                    openFragment(homeFragment, null)
+                    openFragment(homeFragment, bundleStatus)
                 }
                 R.id.post_navigation -> {
                     openFragment(calendarFragment, null)
@@ -49,7 +52,7 @@ class HomeActivity : AppCompatActivity(){
                     openFragment(profileFragment,bundle)
                 }
                 else -> {
-                    openFragment(homeFragment, null)
+                    openFragment(homeFragment, bundleStatus)
                 }
             }
 
