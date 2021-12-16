@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
@@ -16,11 +17,10 @@ import com.example.share4care.databinding.FragmentRegAccountInfoBinding
 import com.example.share4care.shihan.*
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 
 class RegAccountInfo : Fragment() {
     private lateinit var binding: FragmentRegAccountInfoBinding
@@ -33,7 +33,6 @@ class RegAccountInfo : Fragment() {
 
     ): View? {
         lateinit var accountData: UserAccInfo
-        fetchUserNameList()
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_reg_account_info, container, false)
 
@@ -45,8 +44,14 @@ class RegAccountInfo : Fragment() {
             )
             if (isInvalid) { return@setOnClickListener }
 
-            isInvalid = usernameIsExist(binding.regInputEmailUsername.toString())
-            if (isInvalid) { return@setOnClickListener }
+
+//            fetchUserNameList("User", object:ReturnTableItem{
+//                override fun return_it(s: MutableList<String>) {
+//                   isInvalid = actionValidateUserNameExist(binding.regInputEmailUsername,binding.regAccUsernameContainer,s)
+//                }
+//            })
+
+            if (isInvalid){ return@setOnClickListener }
 
             isInvalid = actionValidateField(
                 binding.regInputPassword,
@@ -152,9 +157,9 @@ class RegAccountInfo : Fragment() {
         return false
     }
 
-    private fun actionValidateUserNameExist(usernameField: TextInputEditText, usernameFieldContainer: TextInputLayout): Boolean {
+    private fun actionValidateUserNameExist(usernameField: TextInputEditText, usernameFieldContainer: TextInputLayout, namelist:MutableList<String>): Boolean {
         val username = usernameField.text.toString()
-        if (usernameIsExist(username)) {
+        if (usernameIsExist(username, namelist)) {
             usernameFieldContainer.error = "The username is already exist, try another"
             return true
         } else
@@ -162,25 +167,34 @@ class RegAccountInfo : Fragment() {
         return false
     }
 
-    private fun fetchUserNameList() {
+    private fun fetchUserNameList(tableName: String, returnValue: ReturnTableItem){
+
+        lateinit var usernameList : MutableList<String>
+        val userTable = FirebaseDatabase.getInstance().getReference(tableName)
         val tableValueListener = object : ValueEventListener {
             override fun onDataChange(table: DataSnapshot) {
                 for (c in table.children){
-                    val tempVal = c.child("username").value.toString()
-                    userNameList.add(tempVal)
+                    val temp = c.key.toString()
+                    usernameList.add(temp)
                 }
-                Log.d("username list", userNameList.toString())
+                returnValue.return_it(usernameList)
             }
-            override fun onCancelled(p0: DatabaseError){
 
+            override fun onCancelled(error: DatabaseError) {
             }
         }
+        userTable.addValueEventListener(tableValueListener)
     }
 
-    private fun usernameIsExist(username: String): Boolean {
-        return username in userNameList
+    private fun usernameIsExist(username: String, namelist: MutableList<String>): Boolean {
+        return username in namelist
+    }
+
+    interface ReturnTableItem{
+        fun return_it(s:MutableList<String>)
     }
 }
+
 
 
 

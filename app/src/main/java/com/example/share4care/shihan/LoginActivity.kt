@@ -12,6 +12,7 @@ import com.example.share4care.chooili.AdminHome
 import com.example.share4care.contentData.Event
 import com.example.share4care.contentData.Travel
 import com.example.share4care.databinding.ActivityLoginBinding
+import com.example.share4care.shihan.roomData.UserViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.DataSnapshot
@@ -20,13 +21,16 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.example.share4care.shihan.roomData.User
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var mUserViewModel: UserViewModel
     val database = Firebase.database
     val myUserRef = database.getReference("User")
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
 
         super.onCreate(savedInstanceState)
 
@@ -147,6 +151,26 @@ class LoginActivity : AppCompatActivity() {
     companion object{
         const val USERNAME = "com.example.share4care.USERNAME"
         const val STATUS = "com.example.share4care.STATUS"
+    }
+
+    private fun insertDataToDatabase(user:UserTableRecord){
+        val userData = User(
+            user.status,
+            user.userName,
+            user.password,
+            user.name,
+            user.gender,
+            user.dob,
+            user.phone,
+            user.email,
+            user.address,
+            user.isOKU,
+            user.occupation,
+            user.companyName,
+            user.accountType,
+            user.imageLink
+        )
+        mUserViewModel.addUser(userData)
     }
 }
 
