@@ -6,7 +6,7 @@
     android:id="@+id/nav_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chooili.MainActivity"
+    tools:context=".chooili.AdminHome"
     tools:openDrawer="start">
 
     <ScrollView
@@ -194,7 +194,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/header"
-        app:menu="@menu/main_menu" />
+        app:menu="@menu/admin_menu" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

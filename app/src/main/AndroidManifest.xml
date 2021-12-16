@@ -22,6 +22,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Share4Care">
         <activity
+            android:name=".ESTActivity"
+            android:exported="false">
+            <meta-data
+                android:name=".HomeActivity"
+                android:value="@layout/activity_home"
+            />
+        </activity>
+        <activity
+            android:name=".shihan.RegistrationMain"
+            android:theme="@style/Theme.Share4Care.NoActionBar"
+            android:exported="false" >
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
             android:name=".chooili.Activity_Verify_User"
             android:exported="false" />
         <activity
@@ -31,19 +50,12 @@
             android:name=".chooili.Activity_About_Us"
             android:exported="false" />
         <activity
-            android:name=".shihan.RegistrationMain"
-            android:exported="false">
-        </activity>
-        <activity android:name=".ESTActivity"
-            android:exported="false"/>
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            android:name=".chooili.AdminHome"
+            android:theme="@style/Theme.Share4Care.NoActionBar"
+            android:exported="false" />
         <activity
             android:name=".shihan.LoginActivity"
+            android:theme="@style/Theme.Share4Care.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -87,6 +99,7 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false"
+            android:theme="@style/Theme.Share4Care.NoActionBar"
             android:label="@string/title_activity_home">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->

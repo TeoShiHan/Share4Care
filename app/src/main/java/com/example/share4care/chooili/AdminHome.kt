@@ -13,13 +13,13 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.share4care.R
 import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity() {
+class AdminHome : AppCompatActivity() {
 
     lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_admin_home)
 
         val drawerLayout: DrawerLayout = findViewById(R.id.nav_drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)

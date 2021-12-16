@@ -40,7 +40,7 @@ class ProfileFragment : Fragment() {
 
     private fun loadUser(callback: UserCallback, key:String){
         val ref = myUserRef
-        var user = UserTableRecord("", "","","","","","","","","","","","")
+        var user = UserTableRecord("", "","","","","","","","","","","","", "")
         val refListener = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
@@ -59,8 +59,9 @@ class ProfileFragment : Fragment() {
                             val occupation = c.child("occupation").value.toString()
                             val accountType = c.child("accountType").value.toString()
                             val companyName = c.child("companyName").value.toString()
+                            val imageLink = c.child("imageLink").value.toString()
 
-                            user = UserTableRecord(status, userName, password, name, gender, dob, phone, email, address, isOKU, occupation, companyName, accountType)
+                            user = UserTableRecord(status, userName, password, name, gender, dob, phone, email, address, isOKU, occupation, companyName, accountType, imageLink)
                         }
                     }
                     callback.onUserBack(user)

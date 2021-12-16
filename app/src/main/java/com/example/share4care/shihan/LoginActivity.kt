@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.example.share4care.HomeActivity
 import com.example.share4care.R
+import com.example.share4care.chooili.AdminHome
 import com.example.share4care.contentData.Event
 import com.example.share4care.contentData.Travel
 import com.example.share4care.databinding.ActivityLoginBinding
@@ -48,12 +50,23 @@ class LoginActivity : AppCompatActivity() {
 
             loadUser(object:UserCallback{
                 override fun onUserBack(s: UserTableRecord) {
-                    if (inputUserName == s.userName){
-                        if(inputPwd == s.password){
+                    if (inputUserName == s.userName && inputPwd == s.password){
+                        if (s.accountType == "Normal"){
                             val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                             intent.putExtra(USERNAME, inputUserName)
+                            intent.putExtra(STATUS, s.status)
+                            startActivity(intent)
+                        } else {
+                            val intent = Intent(this@LoginActivity, AdminHome::class.java)
                             startActivity(intent)
                         }
+                    } else {
+                        val dialog= AlertDialog.Builder(this@LoginActivity)
+                                .setTitle("Select A Type")
+                                .setMessage("Invalid username or password, please try again")
+                                .setNegativeButton("Cancel", null)
+                                .setPositiveButton("Continue", null)
+                        dialog.show()
                     }
                 }
             }, inputUserName)
@@ -94,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loadUser(callback: UserCallback, key:String){
         val ref = myUserRef
-        var user = UserTableRecord("", "","","","","","","","","","","","",)
+        var user = UserTableRecord("", "","","","","","","","","","","","", "")
         val refListener = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
@@ -113,8 +126,9 @@ class LoginActivity : AppCompatActivity() {
                             val occupation = c.child("occupation").value.toString()
                             val accountType = c.child("accountType").value.toString()
                             val companyName = c.child("companyName").value.toString()
+                            val imageLink = c.child("imageLink").value.toString()
 
-                            user = UserTableRecord(status, userName, password, name, gender, dob, phone, email, address, isOKU, occupation, companyName, accountType)
+                            user = UserTableRecord(status, userName, password, name, gender, dob, phone, email, address, isOKU, occupation, companyName, accountType, imageLink)
                         }
                     }
                     callback.onUserBack(user)
@@ -132,6 +146,7 @@ class LoginActivity : AppCompatActivity() {
 
     companion object{
         const val USERNAME = "com.example.share4care.USERNAME"
+        const val STATUS = "com.example.share4care.STATUS"
     }
 }
 
