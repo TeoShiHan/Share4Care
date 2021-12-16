@@ -29,6 +29,7 @@ import com.example.share4care.*
 import com.example.share4care.R
 import com.example.share4care.contentData.*
 import com.example.share4care.databinding.FragmentHomeBinding
+import com.example.share4care.shihan.roomData.*
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -61,6 +62,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var eventRecyclerViewAdapter: EventRecyclerViewAdapter
     private lateinit var mBottomSheetBehaviour: BottomSheetBehavior<ConstraintLayout>
     private lateinit var recyclerViewLayoutManager: LinearLayoutManager
+
+    // for saving the data to local database
+    private lateinit var traveldb : TravelViewModel
+    private lateinit var eventdb : EventViewModel
+    private lateinit var servicedb : ServiceViewModel
+    val roomCaster = TypeCaster()
 
     val database = Firebase.database
     val myEventRef = database.getReference("Events")
@@ -444,7 +451,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                         val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
                         val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        list.add(Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                        val tempEvent = Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment)
+
+                        list.add(tempEvent)
+
+                        val tempRoomEvent = roomCaster.getEventData(tempEvent)
+
+                        eventdb.addEvent(tempRoomEvent)
                     }
 
 //                    Log.d("log event list", list.toString())
@@ -480,7 +493,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                         val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
                         val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        list.add(Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                        val tempService = Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment)
+
+                        list.add(tempService)
+
+                        val tempRoomService = roomCaster.getServiceData(tempService)
+                        servicedb.addService(tempRoomService)
                     }
                     callback.onServiceBack(list)
                 }
@@ -514,7 +532,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                         val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
                         val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        list.add(Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                        val tempTravel = Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment)
+
+                        list.add(tempTravel)
+
+                        val tempRoomTravel = roomCaster.getTravelData(tempTravel)
+
+                        traveldb.addTravel(tempRoomTravel)
                     }
                     callback.onTravelBack(list)
                 }

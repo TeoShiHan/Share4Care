@@ -7,12 +7,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface UserDao {
+interface ServiceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addUser(user: User)
+    fun addService(service: OKUserviceDB)
 
-    @Query("SELECT * FROM user_table ORDER BY userName ASC")
-    fun readAllData(): LiveData<List<User>>
+    @Query("SELECT * FROM service_table ORDER BY title ASC")
+    fun readAllData(): LiveData<List<OKUserviceDB>>
 
 
 }

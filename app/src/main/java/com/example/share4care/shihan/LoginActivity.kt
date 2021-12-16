@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.example.share4care.HomeActivity
 import com.example.share4care.R
 import com.example.share4care.chooili.AdminHome
@@ -30,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
     val myUserRef = database.getReference("User")
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        mUserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         super.onCreate(savedInstanceState)
 
@@ -132,6 +133,7 @@ class LoginActivity : AppCompatActivity() {
                             val imageLink = c.child("imageLink").value.toString()
 
                             user = UserTableRecord(status, userName, password, name, gender, dob, phone, email, address, isOKU, occupation, companyName, accountType, imageLink)
+                            insertDataToDatabase(user)
                         }
                     }
                     callback.onUserBack(user)
