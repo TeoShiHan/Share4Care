@@ -94,7 +94,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loadUser(callback: UserCallback, key:String){
         val ref = myUserRef
-        var user = UserTableRecord("", "","","","","","","","","","","","")
+        var user = UserTableRecord("", "","","","","","","","","","","","",)
         val refListener = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
@@ -133,8 +133,6 @@ class LoginActivity : AppCompatActivity() {
     companion object{
         const val USERNAME = "com.example.share4care.USERNAME"
     }
-
-
 }
 
 

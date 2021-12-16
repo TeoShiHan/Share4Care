@@ -3,6 +3,7 @@ package com.example.share4care.shihan
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +16,16 @@ import com.example.share4care.databinding.FragmentRegAccountInfoBinding
 import com.example.share4care.shihan.*
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 
 class RegAccountInfo : Fragment() {
     private lateinit var binding: FragmentRegAccountInfoBinding
     private val args: RegAccountInfoArgs by navArgs()
+    private lateinit var userNameList: MutableList<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +33,7 @@ class RegAccountInfo : Fragment() {
 
     ): View? {
         lateinit var accountData: UserAccInfo
-
+        fetchUserNameList()
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_reg_account_info, container, false)
 
@@ -37,6 +43,9 @@ class RegAccountInfo : Fragment() {
                 binding.regAccUsernameContainer,
                 "Please enter a username"
             )
+            if (isInvalid) { return@setOnClickListener }
+
+            isInvalid = usernameIsExist(binding.regInputEmailUsername.toString())
             if (isInvalid) { return@setOnClickListener }
 
             isInvalid = actionValidateField(
@@ -141,6 +150,35 @@ class RegAccountInfo : Fragment() {
         } else
             fieldContainer.error = null
         return false
+    }
+
+    private fun actionValidateUserNameExist(usernameField: TextInputEditText, usernameFieldContainer: TextInputLayout): Boolean {
+        val username = usernameField.text.toString()
+        if (usernameIsExist(username)) {
+            usernameFieldContainer.error = "The username is already exist, try another"
+            return true
+        } else
+            usernameFieldContainer.error = null
+        return false
+    }
+
+    private fun fetchUserNameList() {
+        val tableValueListener = object : ValueEventListener {
+            override fun onDataChange(table: DataSnapshot) {
+                for (c in table.children){
+                    val tempVal = c.child("username").value.toString()
+                    userNameList.add(tempVal)
+                }
+                Log.d("username list", userNameList.toString())
+            }
+            override fun onCancelled(p0: DatabaseError){
+
+            }
+        }
+    }
+
+    private fun usernameIsExist(username: String): Boolean {
+        return username in userNameList
     }
 }
 

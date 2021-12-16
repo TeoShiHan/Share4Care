@@ -22,7 +22,6 @@ class RegPersonalInfo : Fragment() {
 
     private lateinit var binding: FragmentRegPersonalInfoBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
