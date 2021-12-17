@@ -1,44 +1,36 @@
 package com.example.share4care
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.share4care.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.template.androidtemplate.ui.main.RecyclerAdapter
+import android.os.Handler
+import com.example.share4care.shihan.LoginActivity
+
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var recyclerAdapter: RecyclerAdapter
+    lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        supportActionBar?.hide()
 
-        val binding:ActivityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        handler = Handler()
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
-        val navController = Navigation.findNavController(this, R.id.container)
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        handler.postDelayed({
+            val goToLogin = getIntentToOtherActivity<LoginActivity>(this)
+            startActivity(goToLogin)
+            finish()
 
-        val bottomSheetParent = findViewById<ConstraintLayout>(R.id.bottom_sheet_parent)
-        val mBottomSheetBehaviour = BottomSheetBehavior.from(bottomSheetParent)
-        mBottomSheetBehaviour.apply {
-            peekHeight=100
-            this.state = BottomSheetBehavior.STATE_SETTLING
-            isFitToContents = false
-            halfExpandedRatio = 0.45f
-        }
-        binding.recyclerView.layoutManager = LinearLayoutManager(
-            this,
-            LinearLayoutManager.VERTICAL, false
-        )
-        recyclerAdapter = RecyclerAdapter()
-        binding.recyclerView.adapter = recyclerAdapter
+        }, 3000)
+
+
+        val goToLogin = getIntentToOtherActivity<LoginActivity>(this)
+    }
+
+    private inline fun <reified T : Any> getIntentToOtherActivity(currentActivity: Activity): Intent {
+        return Intent(currentActivity, T::class.java)
     }
 }
