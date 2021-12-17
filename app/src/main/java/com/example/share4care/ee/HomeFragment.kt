@@ -26,7 +26,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.share4care.*
@@ -78,7 +77,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     val myServiceRef= database.getReference("Services")
     val myTravelRef = database.getReference("Travels")
     val myStorageRef = FirebaseStorage.getInstance().getReference("images")
-
 
     var markersAll = mutableListOf<Marker>()
     var mapMarkerEvent: HashMap<String,String> = HashMap<String,String>()
@@ -147,6 +145,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View? {
         // Inflate the layout for this fragment
 
@@ -182,28 +181,61 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         binding.recyclerView.layoutManager = recyclerViewLayoutManager
         binding.recyclerView.setHasFixedSize(true)
 
-        loadEvent(object:EventCallback{
-            override fun onEventBack(s: MutableList<Event>) {
-                listEvent = s
-                listEST.addAll(listEvent)
-            }
-        })
+        if(isConnectedToWifi()){
+            loadEvent(object:EventCallback{
+                override fun onEventBack(s: MutableList<Event>) {
+                    listEvent = s
+                    listEST.addAll(listEvent)
+                }
+            })
 
-        loadService(object:ServiceCallback{
-            override fun onServiceBack(s: MutableList<Service>) {
-                listService = s
-                listEST.addAll(listService)
-            }
-        })
+            loadService(object:ServiceCallback{
+                override fun onServiceBack(s: MutableList<Service>) {
+                    listService = s
+                    listEST.addAll(listService)
+                }
+            })
 
-        loadTravel(object:TravelCallback{
-            override fun onTravelBack(s: MutableList<Travel>) {
-                listTravel = s
-                listEST.addAll(listTravel)
-                eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
-                binding.recyclerView.adapter = eventRecyclerViewAdapter
-            }
-        })
+            loadTravel(object:TravelCallback{
+                override fun onTravelBack(s: MutableList<Travel>) {
+                    listTravel = s
+                    listEST.addAll(listTravel)
+                    eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
+                    binding.recyclerView.adapter = eventRecyclerViewAdapter
+                }
+            })
+        }
+        else{
+
+            eventdb.readAllData.observe(viewLifecycleOwner, {
+                    returnedValue ->
+                val convertedData = roomCaster.convertEventDataListToRuntimeList(returnedValue)
+                if (convertedData != null) {
+                    listEvent = convertedData.toMutableList()
+                    listEST.addAll(convertedData)
+                }
+            })
+
+            servicedb.readAllData.observe(viewLifecycleOwner,{
+                    returnedValue ->
+                val convertedData = roomCaster.convertServiceDataListToRuntimeList(returnedValue)
+                if (convertedData != null) {
+                    listService = convertedData.toMutableList()
+                    listEST.addAll(convertedData)
+                }
+            })
+
+            traveldb.readAllData.observe(viewLifecycleOwner, {
+                    returnValue->
+                val convertedData = roomCaster.convertTravelDataListToRuntimeList(returnValue)
+                if (convertedData != null) {
+                    listTravel = convertedData.toMutableList()
+                    listEST.addAll(convertedData)
+                }
+            })
+
+        }
+
 
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_choose_type, null)

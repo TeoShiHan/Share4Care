@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class ServiceViewModel(application: Application): AndroidViewModel(application) {
 
-    private val readAllData: LiveData<List<OKUserviceDB>>
+    val readAllData: LiveData<List<OKUserviceDB>>
     private val repository: ServiceRepository
     private val roomCaster = TypeCaster()
 

@@ -10,7 +10,7 @@ import java.security.acl.Owner
 
 class TravelViewModel(application: Application): AndroidViewModel(application) {
 
-    private val readAllData: LiveData<List<TravelDB>>
+    val readAllData: LiveData<List<TravelDB>>
     private val repository: TravelRepository
     private val roomCaster = TypeCaster()
 

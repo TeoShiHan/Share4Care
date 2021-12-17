@@ -131,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(goToRegistrationPage)
         }
 
-        mUserViewModel.readAllData.observe(this, Observer {
+        mUserViewModel.readAllData.observe(this, {
                 dataReturnedByFuncton ->
 
                 val userTableRecord = dataReturnedByFuncton

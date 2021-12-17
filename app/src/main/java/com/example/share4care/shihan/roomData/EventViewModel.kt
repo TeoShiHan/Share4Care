@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 class EventViewModel(application: Application): AndroidViewModel(application) {
 
     private val roomCaster = TypeCaster()
-    private val readAllData: LiveData<List<EventDB>>
+    val readAllData: LiveData<List<EventDB>>
     private val repository: EventRepository
 
     init {
