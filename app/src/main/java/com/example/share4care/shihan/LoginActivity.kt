@@ -43,6 +43,8 @@ class LoginActivity : AppCompatActivity() {
         val binding = getActivityBinding(this)
         val goToRegistrationPage = getIntentToOtherActivity<RegistrationMain>(this)
 
+        formInitialization(binding)
+
 //        if (firstUserRecord != null) {
 //            Toast.makeText(this, firstUserRecord.password, Toast.LENGTH_SHORT).show()
 //            binding.inputEmailOrUsername.setText(firstUserRecord.userName)
@@ -82,6 +84,7 @@ class LoginActivity : AppCompatActivity() {
 
 
             if (isConnectedToWifi()) {
+                Toast.makeText(this, "wifi is connected", Toast.LENGTH_SHORT).show()
                 loadUser(object : UserCallback {
                     override fun onUserBack(s: UserTableRecord) {
                         if (inputUserName == s.userName && inputPwd == s.password) {
@@ -150,24 +153,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(goToRegistrationPage)
         }
 
-        mUserViewModel.addUser(User("", "", "", "", "", "", "", "", "", "", "", "", "", ""))
-        mUserViewModel.readAllData?.observe(this, { dataReturnedByFuncton ->
 
-            val userTableRecord = dataReturnedByFuncton
-            val firstRecord = dataReturnedByFuncton[0]
-
-            var dataToSet: User
-
-            try {
-                val secondRecord = dataReturnedByFuncton[1]
-                dataToSet = secondRecord
-            } catch (e: IndexOutOfBoundsException) {
-                dataToSet = firstRecord
-            }
-
-
-            awaitFunFillFieldWithData(binding, dataToSet.password, dataToSet.userName)
-        })
 
     }
 
@@ -306,6 +292,26 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, "wifi not connected", Toast.LENGTH_SHORT).show()
             return false
         }
+    }
+
+    private fun formInitialization(binding: ActivityLoginBinding){
+        mUserViewModel.addUser(User("", "", "", "", "", "", "", "", "", "", "", "", "", ""))
+        mUserViewModel.readAllData?.observe(this, { dataReturnedByFuncton ->
+            val userTableRecord = dataReturnedByFuncton
+            val firstRecord = dataReturnedByFuncton[0]
+            var dataToSet: User
+            try {
+                val secondRecord = dataReturnedByFuncton[1]
+                dataToSet = secondRecord
+            } catch (e: IndexOutOfBoundsException) {
+                dataToSet = firstRecord
+            }
+
+            if (binding.inputEmailOrUsername.text.toString() == "" || binding.inputPassword.text.toString() == ""){
+                awaitFunFillFieldWithData(binding, dataToSet.password, dataToSet.userName)
+
+            }
+        })
     }
 
 }
