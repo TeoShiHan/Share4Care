@@ -123,7 +123,7 @@ class RegisterEventActivity : AppCompatActivity(){
                     .addOnSuccessListener { snapshot ->
                         val result = snapshot.storage.downloadUrl
                         result.addOnSuccessListener {
-                            Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
+                            //Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
                             image = it.toString()
                             val newEvent = Event(title, host, category, description, date, originalAddress, foundLatitude, foundLongtitude, contactNumber, contactEmail, image)
 
