@@ -12,7 +12,7 @@ interface UserDao {
     fun addUser(user: User)
 
     @Query("SELECT * FROM user_table ORDER BY userName ASC")
-    fun readAllData(): LiveData<List<User>>
+    fun readAllData(): LiveData<List<User>>?
 
 
 }

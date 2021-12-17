@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
 
-    val readAllData: LiveData<List<User>>
+    val readAllData: LiveData<List<User>>?
     private val repository: UserRepository
     var userTable: List<User>? = null
 
@@ -29,9 +29,12 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     }
 
     private fun letDataFlowFromDatabaseToGlobalVariable(owner: LifecycleOwner){
-        readAllData.observe(owner, Observer {
-                data -> userTable = data
-        })
+        if (readAllData != null) {
+            readAllData.observe(owner, Observer {
+                    data -> userTable = data
+            })
+        }
+        else return
     }
 
     fun fetchUserTableData(owner: LifecycleOwner): List<User>? {

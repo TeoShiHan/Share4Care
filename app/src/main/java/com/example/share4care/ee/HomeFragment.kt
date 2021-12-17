@@ -22,10 +22,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.share4care.*
@@ -627,18 +629,32 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
 
-    fun isConnectedToWifi(): Boolean {
-        val context = activity?.applicationContext
-        val connectivity: ConnectivityManager? = null
-        var info: NetworkInfo? = null
+//    fun isConnectedToWifi(): Boolean {
+//        val context = activity?.applicationContext
+//        val connectivity: ConnectivityManager? = null
+//        var info: NetworkInfo? = null
+//
+//        val networkManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE)
+//        val isConnectedWifi = connectivity?.activeNetworkInfo
+//
+//        if (isConnectedWifi != null && isConnectedWifi.state == NetworkInfo.State.CONNECTED){
+//            return true
+//        }else{
+//            Toast.makeText(context, "wifi not turned on, showing local data", Toast.LENGTH_SHORT).show()
+//            return false
+//        }
+//    }
 
-        val networkManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE)
-        val isConnectedWifi = connectivity?.activeNetworkInfo
+    private fun isConnectedToWifi(): Boolean {
+        val connManager = activity?.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 
-        if (isConnectedWifi != null && isConnectedWifi.state == NetworkInfo.State.CONNECTED){
+        if (mWifi!!.isConnected) {
+            // Do whatever
             return true
-        }else{
-            Toast.makeText(context, "wifi not turned on, showing local data", Toast.LENGTH_SHORT).show()
+        }
+        else{
+            Toast.makeText(activity, "wifi not connected", Toast.LENGTH_SHORT).show()
             return false
         }
     }
