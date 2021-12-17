@@ -180,7 +180,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         servicedb = ViewModelProvider(this)[ServiceViewModel::class.java]
         traveldb = ViewModelProvider(this)[TravelViewModel::class.java]
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        //binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         if (status!! =="0"){
             binding.addButton.visibility = View.GONE
