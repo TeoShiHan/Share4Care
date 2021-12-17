@@ -62,6 +62,7 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(intent)
                         } else {
                             val intent = Intent(this@LoginActivity, AdminHome::class.java)
+                            intent.putExtra(USERNAME, inputUserName)
                             startActivity(intent)
                         }
                     } else {
