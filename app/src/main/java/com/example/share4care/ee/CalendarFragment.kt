@@ -1,14 +1,18 @@
 package com.example.share4care.ee
 
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.share4care.*
 import com.example.share4care.contentData.Event
@@ -16,6 +20,8 @@ import com.example.share4care.contentData.Service
 import com.example.share4care.contentData.Travel
 import com.example.share4care.contentData.UserComment
 import com.example.share4care.databinding.FragmentCalendarBinding
+import com.example.share4care.shihan.roomData.EventViewModel
+import com.example.share4care.shihan.roomData.TypeCaster
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.*
 import com.google.android.material.datepicker.*
@@ -39,6 +45,10 @@ class CalendarFragment : Fragment(), CalendarEventRecyclerViewAdapter.ClickedIte
     private lateinit var calendarEventRecyclerViewAdapter: CalendarEventRecyclerViewAdapter
     private lateinit var recyclerViewLayoutManager: LinearLayoutManager
 
+    private lateinit var eventdb : EventViewModel
+    val roomCaster = TypeCaster()
+
+
     val database = Firebase.database
     val myEventRef = database.getReference("Events")
     val myServiceRef= database.getReference("Services")
@@ -58,18 +68,37 @@ class CalendarFragment : Fragment(), CalendarEventRecyclerViewAdapter.ClickedIte
         // Inflate the layout for this fragment
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
 
+        eventdb = ViewModelProvider(this)[EventViewModel::class.java]
+
+
         recyclerViewLayoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.layoutManager = recyclerViewLayoutManager
         binding.recyclerView.setHasFixedSize(true)
 
-        loadEvent(object:EventCallback{
-            override fun onEventBack(s: MutableList<Event>) {
-                listEvent = s
-                calendarEventRecyclerViewAdapter = CalendarEventRecyclerViewAdapter(ArrayList(listEvent),this@CalendarFragment)
-                binding.recyclerView.adapter = calendarEventRecyclerViewAdapter
+        if (isConnectedToWifi()){
+            loadEvent(object:EventCallback{
+                override fun onEventBack(s: MutableList<Event>) {
+                    listEvent = s
+                    calendarEventRecyclerViewAdapter = CalendarEventRecyclerViewAdapter(ArrayList(listEvent),this@CalendarFragment)
+                    binding.recyclerView.adapter = calendarEventRecyclerViewAdapter
 
-            }
-        })
+                }
+            })
+        }
+        else{
+
+            eventdb.readAllData.observe(viewLifecycleOwner, {
+                    returnedValue ->
+                val convertedData = roomCaster.convertEventDataListToRuntimeList(returnedValue)
+                if (convertedData != null) {
+                    listEvent = convertedData
+                    calendarEventRecyclerViewAdapter = CalendarEventRecyclerViewAdapter(ArrayList(listEvent),this@CalendarFragment)
+                    binding.recyclerView.adapter = calendarEventRecyclerViewAdapter
+                }
+            })
+        }
+
+
 
         loadService(object:ServiceCallback{
             override fun onServiceBack(s: MutableList<Service>) {
@@ -284,5 +313,19 @@ class CalendarFragment : Fragment(), CalendarEventRecyclerViewAdapter.ClickedIte
         intent.putExtra("eventObj",event1)
         startActivity(intent)
         Log.e("eventtt","==>"+event1.title)
+    }
+
+    private fun isConnectedToWifi(): Boolean {
+        val connManager = activity?.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+
+        if (mWifi!!.isConnected) {
+            // Do whatever
+            return true
+        }
+        else{
+            Toast.makeText(activity, "wifi not connected", Toast.LENGTH_SHORT).show()
+            return false
+        }
     }
 }

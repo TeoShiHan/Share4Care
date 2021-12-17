@@ -226,12 +226,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             }, 1)
         }
         else{
+            Toast.makeText(activity, "applying local data", Toast.LENGTH_SHORT).show()
 
             eventdb.readAllData.observe(viewLifecycleOwner, {
                     returnedValue ->
                 val convertedData = roomCaster.convertEventDataListToRuntimeList(returnedValue)
                 if (convertedData != null) {
-                    listEvent = convertedData.toMutableList()
+                    listEvent = convertedData
                     listEST.addAll(convertedData)
                 }
             })
@@ -240,7 +241,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                     returnedValue ->
                 val convertedData = roomCaster.convertServiceDataListToRuntimeList(returnedValue)
                 if (convertedData != null) {
-                    listService = convertedData.toMutableList()
+                    listService = convertedData
                     listEST.addAll(convertedData)
                 }
             })
@@ -249,11 +250,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                     returnValue->
                 val convertedData = roomCaster.convertTravelDataListToRuntimeList(returnValue)
                 if (convertedData != null) {
-                    listTravel = convertedData.toMutableList()
+                    listTravel = convertedData
                     listEST.addAll(convertedData)
+                    eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
+                    binding.recyclerView.adapter = eventRecyclerViewAdapter
                 }
             })
-
         }
 
 

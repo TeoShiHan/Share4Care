@@ -1,8 +1,11 @@
 package com.example.share4care.shihan.roomData
 
+import android.app.Activity
+import android.widget.Toast
 import com.example.share4care.contentData.Event
 import com.example.share4care.contentData.Service
 import com.example.share4care.contentData.Travel
+import com.example.share4care.contentData.UserComment
 
 class TypeCaster {
     fun getEventData(event: Event): EventDB {
@@ -68,10 +71,10 @@ class TypeCaster {
             event.contactEmail,
             event.image,
             event.status,
-            null,
-            null,
-            null,
-            null
+            ArrayList<String>(),
+            ArrayList<String>(),
+            ArrayList<String>(),
+            mutableListOf<UserComment>(),
         )
     }
 
@@ -88,10 +91,10 @@ class TypeCaster {
             service.contactEmail,
             service.image,
             service.status,
-            null,
-            null,
-            null,
-            null
+            ArrayList<String>(),
+            ArrayList<String>(),
+            ArrayList<String>(),
+            mutableListOf<UserComment>(),
         )
     }
 
@@ -108,38 +111,38 @@ class TypeCaster {
             travel.contactEmail,
             travel.image,
             travel.status,
-            null,
-            null,
-            null,
-            null
+            ArrayList<String>(),
+            ArrayList<String>(),
+            ArrayList<String>(),
+            mutableListOf<UserComment>(),
         )
     }
 
-    fun convertTravelDataListToRuntimeList(requiredConvertedList: List<TravelDB>): List<Travel>? {
-        val convertedList: List<Travel>? = null
+    fun convertTravelDataListToRuntimeList(requiredConvertedList: List<TravelDB>): MutableList<Travel>? {
+        val convertedList = mutableListOf<Travel>()
         for (singleItem in requiredConvertedList){
             val tempRecord = convertTravelDataToRuntime(singleItem)
-            convertedList?.toMutableList()?.add(tempRecord)
+            convertedList?.add(tempRecord)
         }
         return convertedList
     }
 
 
-    fun convertServiceDataListToRuntimeList(requiredConvertedList: List<OKUserviceDB>): List<Service>? {
-        val convertedList: List<Service>? = null
+    fun convertServiceDataListToRuntimeList(requiredConvertedList: List<OKUserviceDB>): MutableList<Service>? {
+        val convertedList = mutableListOf<Service>()
         for (singleItem in requiredConvertedList){
             val tempRecord = convertServiceDataToRuntimeSupport(singleItem)
-            convertedList?.toMutableList()?.add(tempRecord)
+            convertedList?.add(tempRecord)
         }
         return convertedList
     }
 
 
-    fun convertEventDataListToRuntimeList(requiredConvertedList: List<EventDB>): List<Event>? {
-        val convertedList: List<Event>? = null
+    fun convertEventDataListToRuntimeList(requiredConvertedList: List<EventDB>): MutableList<Event>? {
+        val convertedList = mutableListOf<Event>()
         for (singleItem in requiredConvertedList){
             val tempRecord = convertEventDBDataToRuntimeSupport(singleItem)
-            convertedList?.toMutableList()?.add(tempRecord)
+            convertedList?.add(tempRecord)
         }
         return convertedList
     }
