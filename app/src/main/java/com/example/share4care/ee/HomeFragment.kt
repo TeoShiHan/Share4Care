@@ -9,6 +9,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -22,16 +24,20 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.share4care.*
 import com.example.share4care.R
 import com.example.share4care.contentData.*
 import com.example.share4care.databinding.FragmentHomeBinding
+import com.example.share4care.shihan.roomData.*
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -64,6 +70,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var eventRecyclerViewAdapter: EventRecyclerViewAdapter
     private lateinit var mBottomSheetBehaviour: BottomSheetBehavior<ConstraintLayout>
     private lateinit var recyclerViewLayoutManager: LinearLayoutManager
+
+    // for saving the data to local database
+    private lateinit var traveldb : TravelViewModel
+    private lateinit var eventdb : EventViewModel
+    private lateinit var servicedb : ServiceViewModel
+    val roomCaster = TypeCaster()
 
     val database = Firebase.database
     val myEventRef = database.getReference("Events")
@@ -153,8 +165,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View? {
         // Inflate the layout for this fragment
+
+        // Initialize the room db
+        // initialize room db
+        eventdb = ViewModelProvider(this)[EventViewModel::class.java]
+        servicedb = ViewModelProvider(this)[ServiceViewModel::class.java]
+        traveldb = ViewModelProvider(this)[TravelViewModel::class.java]
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -182,28 +201,61 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         binding.recyclerView.layoutManager = recyclerViewLayoutManager
         binding.recyclerView.setHasFixedSize(true)
 
-        loadEvent(object:EventCallback{
-            override fun onEventBack(s: MutableList<Event>) {
-                listEvent = s
-                listEST.addAll(listEvent)
-            }
-        }, 1)
+        if(isConnectedToWifi()){
+            loadEvent(object:EventCallback{
+                override fun onEventBack(s: MutableList<Event>) {
+                    listEvent = s
+                    listEST.addAll(listEvent)
+                }
+            }, 1)
 
-        loadService(object:ServiceCallback{
-            override fun onServiceBack(s: MutableList<Service>) {
-                listService = s
-                listEST.addAll(listService)
-            }
-        }, 1)
+            loadService(object:ServiceCallback{
+                override fun onServiceBack(s: MutableList<Service>) {
+                    listService = s
+                    listEST.addAll(listService)
+                }
+            }, 1)
 
-        loadTravel(object:TravelCallback{
-            override fun onTravelBack(s: MutableList<Travel>) {
-                listTravel = s
-                listEST.addAll(listTravel)
-                eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
-                binding.recyclerView.adapter = eventRecyclerViewAdapter
-            }
-        }, 1)
+            loadTravel(object:TravelCallback{
+                override fun onTravelBack(s: MutableList<Travel>) {
+                    listTravel = s
+                    listEST.addAll(listTravel)
+                    eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
+                    binding.recyclerView.adapter = eventRecyclerViewAdapter
+                }
+            }, 1)
+        }
+        else{
+
+            eventdb.readAllData.observe(viewLifecycleOwner, {
+                    returnedValue ->
+                val convertedData = roomCaster.convertEventDataListToRuntimeList(returnedValue)
+                if (convertedData != null) {
+                    listEvent = convertedData.toMutableList()
+                    listEST.addAll(convertedData)
+                }
+            })
+
+            servicedb.readAllData.observe(viewLifecycleOwner,{
+                    returnedValue ->
+                val convertedData = roomCaster.convertServiceDataListToRuntimeList(returnedValue)
+                if (convertedData != null) {
+                    listService = convertedData.toMutableList()
+                    listEST.addAll(convertedData)
+                }
+            })
+
+            traveldb.readAllData.observe(viewLifecycleOwner, {
+                    returnValue->
+                val convertedData = roomCaster.convertTravelDataListToRuntimeList(returnValue)
+                if (convertedData != null) {
+                    listTravel = convertedData.toMutableList()
+                    listEST.addAll(convertedData)
+                }
+            })
+
+        }
+
 
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_choose_type, null)
@@ -447,26 +499,32 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 val list = mutableListOf<Event>()
                 if (p0.exists()) {
                     for (c in p0.children) {
-                        if ((c.child("status").value as Long).toInt() == key){
-                            val title =  c.child("title").value.toString()
-                            val host =  c.child("host").value.toString()
-                            val category =  c.child("category").value.toString()
-                            val description = c.child("description").value.toString()
-                            val date = c.child("date").value.toString()
-                            val address = c.child("address").value.toString()
-                            val latitude = c.child("latitude").value as Double
-                            val longtitude = c.child("longtitude").value as Double
-                            val contactNumber = c.child("contactNumber").value.toString()
-                            val contactEmail = c.child("contactEmail").value.toString()
-                            val image = c.child("image").value.toString()
-                            val status = (c.child("status").value as Long).toInt()
-                            val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
-                            val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
-                            val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
-                            val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
+                    if ((c.child("status").value as Long).toInt() == key){
+                        val title =  c.child("title").value.toString()
+                        val host =  c.child("host").value.toString()
+                        val category =  c.child("category").value.toString()
+                        val description = c.child("description").value.toString()
+                        val date = c.child("date").value.toString()
+                        val address = c.child("address").value.toString()
+                        val latitude = c.child("latitude").value as Double
+                        val longtitude = c.child("longtitude").value as Double
+                        val contactNumber = c.child("contactNumber").value.toString()
+                        val contactEmail = c.child("contactEmail").value.toString()
+                        val image = c.child("image").value.toString()
+                        val status = (c.child("status").value as Long).toInt()
+                        val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
+                        val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
+                        val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
+                        val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                            list.add(Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
-                        }
+                        val tempEvent = Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment)
+
+                        list.add(tempEvent)
+
+                        val tempRoomEvent = roomCaster.getEventData(tempEvent)
+
+                        eventdb.addEvent(tempRoomEvent)
+                    }
                     }
 //                    Log.d("log event list", list.toString())
                     callback.onEventBack(list)
@@ -485,25 +543,30 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 val list = mutableListOf<Service>()
                 if (p0.exists()) {
                     for (c in p0.children) {
-                        if ((c.child("status").value as Long).toInt() == key){
-                            val title =  c.child("title").value.toString()
-                            val host =  c.child("host").value.toString()
-                            val category =  c.child("category").value.toString()
-                            val description = c.child("description").value.toString()
-                            val address = c.child("address").value.toString()
-                            val latitude = c.child("latitude").value as Double
-                            val longtitude = c.child("longtitude").value as Double
-                            val contactNumber = c.child("contactNumber").value.toString()
-                            val contactEmail = c.child("contactEmail").value.toString()
-                            val image = c.child("image").value.toString()
-                            val status = (c.child("status").value as Long).toInt()
-                            val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
-                            val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
-                            val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
-                            val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
+                    if ((c.child("status").value as Long).toInt() == key){
 
-                            list.add(Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
-                        }
+                        val title =  c.child("title").value.toString()
+                        val host =  c.child("host").value.toString()
+                        val category =  c.child("category").value.toString()
+                        val description = c.child("description").value.toString()
+                        val address = c.child("address").value.toString()
+                        val latitude = c.child("latitude").value as Double
+                        val longtitude = c.child("longtitude").value as Double
+                        val contactNumber = c.child("contactNumber").value.toString()
+                        val contactEmail = c.child("contactEmail").value.toString()
+                        val image = c.child("image").value.toString()
+                        val status = (c.child("status").value as Long).toInt()
+                        val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
+                        val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
+                        val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
+                        val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
+
+                        val tempService = Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment)
+
+                        list.add(tempService)
+
+                        val tempRoomService = roomCaster.getServiceData(tempService)
+                        servicedb.addService(tempRoomService)}
                     }
                     callback.onServiceBack(list)
                 }
@@ -521,26 +584,31 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 val list = mutableListOf<Travel>()
                 if (p0.exists()) {
                     for (c in p0.children) {
-                        if ((c.child("status").value as Long).toInt() == key){
-                            val title =  c.child("title").value.toString()
-                            val host =  c.child("host").value.toString()
-                            val category =  c.child("category").value.toString()
-                            val description = c.child("description").value.toString()
-                            val address = c.child("address").value.toString()
-                            val latitude = c.child("latitude").value as Double
-                            val longtitude = c.child("longtitude").value as Double
-                            val contactNumber = c.child("contactNumber").value.toString()
-                            val contactEmail = c.child("contactEmail").value.toString()
-                            val image = c.child("image").value.toString()
-                            val status = (c.child("status").value as Long).toInt()
-                            val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
-                            val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
-                            val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
-                            val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
+                    if ((c.child("status").value as Long).toInt() == key){
 
-                            list.add(Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment))
+                        val title =  c.child("title").value.toString()
+                        val host =  c.child("host").value.toString()
+                        val category =  c.child("category").value.toString()
+                        val description = c.child("description").value.toString()
+                        val address = c.child("address").value.toString()
+                        val latitude = c.child("latitude").value as Double
+                        val longtitude = c.child("longtitude").value as Double
+                        val contactNumber = c.child("contactNumber").value.toString()
+                        val contactEmail = c.child("contactEmail").value.toString()
+                        val image = c.child("image").value.toString()
+                        val status = (c.child("status").value as Long).toInt()
+                        val like = if(c.child("like").exists()) c.child("like").value as MutableList<String> else mutableListOf()
+                        val dislike = if(c.child("dislike").exists()) c.child("dislike").value as MutableList<String> else mutableListOf()
+                        val save = if(c.child("save").exists()) c.child("save").value as MutableList<String> else mutableListOf()
+                        val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                        }
+                        val tempTravel = Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, like, dislike, save, comment)
+
+                        list.add(tempTravel)
+
+                        val tempRoomTravel = roomCaster.getTravelData(tempTravel)
+
+                        traveldb.addTravel(tempRoomTravel)}
                     }
                     callback.onTravelBack(list)
                 }
@@ -583,5 +651,36 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         const val EVENT = "com.example.share4care.EVENT"
         const val SERVICE = "com.example.share4care.SERVICE"
         const val TRAVEL = "com.example.share4care.TRAVEL"
+    }
+
+
+//    fun isConnectedToWifi(): Boolean {
+//        val context = activity?.applicationContext
+//        val connectivity: ConnectivityManager? = null
+//        var info: NetworkInfo? = null
+//
+//        val networkManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE)
+//        val isConnectedWifi = connectivity?.activeNetworkInfo
+//
+//        if (isConnectedWifi != null && isConnectedWifi.state == NetworkInfo.State.CONNECTED){
+//            return true
+//        }else{
+//            Toast.makeText(context, "wifi not turned on, showing local data", Toast.LENGTH_SHORT).show()
+//            return false
+//        }
+//    }
+
+    private fun isConnectedToWifi(): Boolean {
+        val connManager = activity?.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+
+        if (mWifi!!.isConnected) {
+            // Do whatever
+            return true
+        }
+        else{
+            Toast.makeText(activity, "wifi not connected", Toast.LENGTH_SHORT).show()
+            return false
+        }
     }
 }

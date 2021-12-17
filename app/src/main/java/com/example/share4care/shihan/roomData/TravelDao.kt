@@ -7,12 +7,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface UserDao {
+interface TravelDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addUser(user: User)
+    fun addTravel(travel: TravelDB)
 
-    @Query("SELECT * FROM user_table ORDER BY userName ASC")
-    fun readAllData(): LiveData<List<User>>?
+    @Query("SELECT * FROM travel_table ORDER BY title ASC")
+    fun readAllData(): LiveData<List<TravelDB>>
 
 
 }
