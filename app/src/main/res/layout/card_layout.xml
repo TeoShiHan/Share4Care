@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_pertanyaan"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="12dp"
+    android:clickable="true"
+    android:foreground="?selectableItemBackground"
+    card_view:cardBackgroundColor="#FFFF"
+    card_view:cardCornerRadius="8dp"
+    card_view:contentPadding="10dp">
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content" >-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/kodePertanyaan"-->
+    <!--                android:layout_width="181dp"-->
+    <!--                android:layout_height="20dp"-->
+    <!--                android:layout_marginStart="16dp"-->
+    <!--                android:layout_marginTop="16dp"-->
+    <!--                android:layout_marginEnd="68dp"-->
+
+    <!--                android:text="@string/code" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/kategori"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="20dp"-->
+    <!--                android:layout_marginTop="16dp"-->
+    <!--                android:layout_marginEnd="16dp"-->
+    <!--                android:text="@string/category"-->
+    <!--                android:gravity="end|center_vertical"/>-->
+
+    <!--        </LinearLayout>-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/isiPertanyaan"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="36dp"-->
+    <!--                android:layout_marginStart="16dp"-->
+    <!--                android:layout_marginTop="44dp"-->
+    <!--                android:layout_marginEnd="16dp"-->
+    <!--                android:layout_marginBottom="16dp"-->
+    <!--                android:gravity="top"-->
+    <!--                android:text="@string/content" />-->
+
+    <!--        </LinearLayout>-->
+
+    <!--    </RelativeLayout>-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivPost"
+            android:layout_width="100dp"
+            android:layout_height="0dp"
+            android:hapticFeedbackEnabled="true"
+            android:scaleType="centerCrop"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="0.0"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/colorContainerNight"
+            android:textSize="16sp"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toEndOf="@+id/ivPost"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDesc"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:scrollHorizontally="false"
+            android:textSize="12sp"
+            card_view:layout_constraintBottom_toTopOf="@+id/iconLike"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.0"
+            card_view:layout_constraintStart_toEndOf="@+id/ivPost"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+        <TextView
+            android:id="@+id/tvLike"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:text="TextView"
+            android:textSize="10sp"
+            card_view:layout_constraintBottom_toBottomOf="@+id/iconLike"
+            card_view:layout_constraintStart_toEndOf="@+id/iconLike"
+            card_view:layout_constraintTop_toTopOf="@+id/iconLike" />
+
+        <ImageView
+            android:id="@+id/iconLike"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="8dp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintStart_toEndOf="@+id/ivPost"
+            card_view:srcCompat="@drawable/ic_outline_thumb_up_24" />
+
+        <TextView
+            android:id="@+id/tvDislike"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:text="TextView"
+            android:textSize="10sp"
+            card_view:layout_constraintBottom_toBottomOf="@+id/iconDislike"
+            card_view:layout_constraintStart_toEndOf="@+id/iconDislike"
+            card_view:layout_constraintTop_toTopOf="@+id/iconDislike" />
+
+        <ImageView
+            android:id="@+id/iconDislike"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="8dp"
+            card_view:layout_constraintStart_toEndOf="@+id/tvLike"
+            card_view:layout_constraintTop_toTopOf="@+id/iconLike"
+            card_view:srcCompat="@drawable/ic_outline_thumb_down_24" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

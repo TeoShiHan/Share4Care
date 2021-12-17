@@ -1,0 +1,100 @@
+<resources>
+    <string name="app_name">Share4Care</string>
+    <string name="show">Show</string>
+    <string name="like">Like</string>
+    <string name="dislike">dislike</string>
+    <string name="share">Share</string>
+    <string name="report">Report</string>
+    <string name="save">Save</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_create">CreateActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="code">Code</string>
+    <string name="content">Content</string>
+    <string name="category">Category</string>
+
+    <!--  Bottom Navigation  -->
+    <string name="title_home">Home</string>
+    <string name="title_calendar">Calendar</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_activity_post_detail">PostDetailActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+
+    <!-- Home Map Activity -->
+    <string name="title_activity_home">HomeActivity</string>
+
+    <!-- Categories in Dialog -->
+    <string-array name="type_array">
+        <item>Event</item>
+        <item>Service</item>
+        <item>Travel</item>
+    </string-array>
+
+    <!-- Text Headers in Forms -->
+    <string name="title">Title</string>
+    <string name="host">Host</string>
+    <string name="_category">Category</string>
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="address">Address</string>
+    <string name="contactNum">Contact Number</string>
+    <string name="contactEmail">Contact Email</string>
+    <string name="image">Upload Image</string>
+    <string name="create">DONE</string>
+    <string name="externalLink">External Link</string>
+    <string name="attachment">Attachment</string>
+    <string name="tag">Tag</string>
+    <string name="username_or_email">username or email</string>
+    <string name="forgot_password">forgot password?</string>
+    <string name="log_in">\u0020Log in</string>
+    <string name="password">password</string>
+    <string name="do_not_hav_a_account">Do not hav a account?</string>
+    <string name="sign_in">Sign in.</string>
+    <string name="sign_up">\u0020Sign up</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="mobile_phone">Mobile Phone</string>
+    <string name="company_name">Company Name</string>
+    <string name="occupation">Occupation</string>
+    <string name="website_social_media">Website/Social Media</string>
+    <string name="name">Name</string>
+    <string name="already_have_account">Already have account?</string>
+    <string name="contactformfragment">ContactFormFragment</string>
+    <string name="company_info_fragment">company_info_fragment</string>
+    <string name="date_picker">Date Picker</string>
+    <string name="i_am_oku">I am OKU</string>
+
+    <string name="nav_drawer_open">Open navigation drawer</string>
+    <string name="nav_drawer_close">Close navigation drawer</string>
+    <string name="sign_up_user">Sign Up | User</string>
+    <string name="please_fill_in_your_details">Please fill in your details</string>
+    <string-array name="event_category">
+        <item>Charity</item>
+        <item>Seminar</item>
+        <item>Workshop</item>
+    </string-array>
+    <string-array name="service_category">
+        <item>Assistive Services</item>
+        <item>Education</item>
+        <item>Employment</item>
+        <item>Vocational Training</item>
+    </string-array>
+    <string-array name="travel_category">
+        <item>Accessible Bus Stop</item>
+        <item>Accessible Hotel Rooms</item>
+        <item>Accessible Parking Space</item>
+        <item>Accessible Public Toilet</item>
+    </string-array>
+
+</resources>

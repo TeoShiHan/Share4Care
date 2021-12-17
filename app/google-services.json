@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "773288870677",
+    "firebase_url": "https://share4care-821af-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "share4care-821af",
+    "storage_bucket": "share4care-821af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773288870677:android:fa2754960e2ac9305f9f1c",
+        "android_client_info": {
+          "package_name": "com.android.example.try_admin1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773288870677-m1pkgria5pr0243vs9j5smm80kerj2f3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0f6XiTGYURzfgnBPR3Qhl2vc6Ml1wwMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773288870677-m1pkgria5pr0243vs9j5smm80kerj2f3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773288870677:android:d7f0b764463b30305f9f1c",
+        "android_client_info": {
+          "package_name": "com.example.newshare4care"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773288870677-m1pkgria5pr0243vs9j5smm80kerj2f3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0f6XiTGYURzfgnBPR3Qhl2vc6Ml1wwMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773288870677-m1pkgria5pr0243vs9j5smm80kerj2f3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773288870677:android:37a2d4daf549ce1c5f9f1c",
+        "android_client_info": {
+          "package_name": "com.example.share4care"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773288870677-m1pkgria5pr0243vs9j5smm80kerj2f3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0f6XiTGYURzfgnBPR3Qhl2vc6Ml1wwMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773288870677-m1pkgria5pr0243vs9j5smm80kerj2f3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

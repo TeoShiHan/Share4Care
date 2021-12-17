@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        tools:context=".shihan.LoginActivity">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_company_name_input_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
+            android:hint="@string/company_name"
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:startIconDrawable="@drawable/company_icon"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/company_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_company_email_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Company email"
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="@+id/reg_company_name_input_container"
+            app:layout_constraintStart_toStartOf="@+id/reg_company_name_input_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_company_name_input_container"
+            app:startIconDrawable="@drawable/email_icon"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_company_email_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_company_tel_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Tel"
+
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="@+id/reg_company_email_container"
+            app:layout_constraintStart_toStartOf="@+id/reg_company_email_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_company_email_container"
+            app:startIconDrawable="@drawable/phone_icon_"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_company_tel_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_company_address_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+
+            android:hint="Company Address"
+
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="@+id/reg_company_tel_container"
+            app:layout_constraintStart_toStartOf="@+id/reg_company_tel_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_company_tel_container"
+            app:startIconDrawable="@drawable/address_icon"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_company_address_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_company_occupation_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+
+            android:hint="@string/occupation"
+
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="@+id/reg_company_address_container"
+            app:layout_constraintStart_toStartOf="@+id/reg_company_address_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_company_address_container"
+            app:startIconDrawable="@drawable/occupation_icon"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_compnay_occupation_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/reg_social_media_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+
+            android:hint="@string/website_social_media"
+
+            app:boxStrokeColor="@color/app_orange"
+            app:hintTextColor="@color/app_orange"
+            app:layout_constraintEnd_toEndOf="@+id/reg_company_occupation_container"
+            app:layout_constraintStart_toStartOf="@+id/reg_company_occupation_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_company_occupation_container"
+            app:startIconDrawable="@drawable/globe"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reg_social_media_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <CheckBox
+            android:id="@+id/reg_is_personal_use_checkboc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Personal use only"
+            app:layout_constraintStart_toStartOf="@+id/reg_social_media_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_social_media_container" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/reg_company_to_prev_page_btn"
+            android:layout_width="120dp"
+            android:layout_height="49dp"
+            android:background="@drawable/button_gradient"
+            android:text="@string/previous"
+            app:layout_constraintStart_toStartOf="@+id/reg_is_personal_use_checkboc"
+            app:layout_constraintTop_toBottomOf="@+id/reg_is_personal_use_checkboc" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/reg_company_to_next_page_btn"
+            android:layout_width="120dp"
+            android:layout_height="49dp"
+            android:background="@drawable/button_gradient"
+            android:text="@string/next"
+            app:layout_constraintEnd_toEndOf="@+id/reg_social_media_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_is_personal_use_checkboc" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@+id/reg_social_media_container"
+            app:layout_constraintStart_toStartOf="@+id/reg_social_media_container"
+            app:layout_constraintTop_toBottomOf="@+id/reg_company_to_next_page_btn">
+
+            <TextView
+                android:id="@+id/text_ask_acc"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:layout_marginStart="0dp"
+                android:text="@string/do_not_hav_a_account" />
+
+            <TextView
+                android:id="@+id/from_reg_company_to_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_in"
+                android:textColor="@color/app_orange" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

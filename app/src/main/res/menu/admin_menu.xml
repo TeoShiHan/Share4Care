@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/admin_home"
+            android:icon="@drawable/admin_home_icon"
+            android:title="Home" />
+
+        <item android:title="Verification and Deletion">
+
+            <menu>
+
+                <item
+                    android:id="@+id/admin_verifyUser"
+                    android:icon="@drawable/verify_user"
+                    android:title="Verify User" />
+
+                <item
+                    android:id="@+id/admin_verifyEST"
+                    android:icon="@drawable/verify_est"
+                    android:title="Verify EST" />
+
+            </menu>
+
+        </item>
+    </group>
+
+    <item android:title="Content Management">
+
+        <menu>
+
+            <item
+                android:id="@+id/admin_createEST"
+                android:icon="@drawable/create_est"
+                android:title="Create EST" />
+
+
+
+        </menu>
+
+    </item>
+
+
+</menu>
