@@ -130,7 +130,7 @@ class RegisterServiceActivity : AppCompatActivity() {
                     .addOnSuccessListener { snapshot ->
                         val result = snapshot.storage.downloadUrl
                         result.addOnSuccessListener {
-                            Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
+                            //Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
                             image = it.toString()
 
                             val newService = Service(
@@ -150,7 +150,7 @@ class RegisterServiceActivity : AppCompatActivity() {
 
                             myDatabaseRef.child(key).setValue(newService)
                                 .addOnSuccessListener {
-                                    Toast.makeText(applicationContext, "Event added and awaiting for verification", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(applicationContext, "Service added and awaiting for verification", Toast.LENGTH_LONG).show()
                                 }
                                 .addOnFailureListener {
                                     Toast.makeText(applicationContext, it.message.toString(), Toast.LENGTH_LONG)
