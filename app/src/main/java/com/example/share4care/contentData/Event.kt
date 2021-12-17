@@ -20,7 +20,6 @@ data class Event(
     var dislike:  HashMap<*,*>?,
     var save:  HashMap<*,*>?,
     var comment: MutableList<UserComment>?
-
 ):Serializable {
     constructor(title:String, host:String, category:String, description: String, date:String,
                 address: String, latitude: Double, longtitude: Double, contactNumber: String, contactEmail: String, imgUrl:String ): this

@@ -25,7 +25,7 @@ import com.google.firebase.ktx.Firebase
 class RegAccountInfo : Fragment() {
     private lateinit var binding: FragmentRegAccountInfoBinding
     private val args: RegAccountInfoArgs by navArgs()
-    private lateinit var userNameList: MutableList<String>
+    var usernameList = mutableListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +33,7 @@ class RegAccountInfo : Fragment() {
 
     ): View? {
         lateinit var accountData: UserAccInfo
+        fetchUserNameList("User")
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_reg_account_info, container, false)
 
@@ -44,12 +45,7 @@ class RegAccountInfo : Fragment() {
             )
             if (isInvalid) { return@setOnClickListener }
 
-
-//            fetchUserNameList("User", object:ReturnTableItem{
-//                override fun return_it(s: MutableList<String>) {
-//                   isInvalid = actionValidateUserNameExist(binding.regInputEmailUsername,binding.regAccUsernameContainer,s)
-//                }
-//            })
+            isInvalid = actionValidateUserNameExist(binding.regInputEmailUsername,binding.regAccUsernameContainer,usernameList)
 
             if (isInvalid){ return@setOnClickListener }
 
@@ -167,9 +163,7 @@ class RegAccountInfo : Fragment() {
         return false
     }
 
-    private fun fetchUserNameList(tableName: String, returnValue: ReturnTableItem){
-
-        lateinit var usernameList : MutableList<String>
+    private fun fetchUserNameList(tableName: String){
         val userTable = FirebaseDatabase.getInstance().getReference(tableName)
         val tableValueListener = object : ValueEventListener {
             override fun onDataChange(table: DataSnapshot) {
@@ -177,7 +171,6 @@ class RegAccountInfo : Fragment() {
                     val temp = c.key.toString()
                     usernameList.add(temp)
                 }
-                returnValue.return_it(usernameList)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -190,9 +183,10 @@ class RegAccountInfo : Fragment() {
         return username in namelist
     }
 
-    interface ReturnTableItem{
-        fun return_it(s:MutableList<String>)
-    }
+    // user global variable for cleanliness
+    //    interface ReturnTableItem{
+    //        fun return_it(s:MutableList<String>)
+    //    }
 }
 
 

@@ -135,7 +135,6 @@ class RegisterTravelActivity : AppCompatActivity() {
                     .addOnSuccessListener { snapshot ->
                         val result = snapshot.storage.downloadUrl
                         result.addOnSuccessListener {
-                            Toast.makeText(applicationContext, "Completed", Toast.LENGTH_LONG).show()
                             image = it.toString()
 
                             val newTravel = Travel(
@@ -155,7 +154,8 @@ class RegisterTravelActivity : AppCompatActivity() {
 
                             myDatabaseRef.child(key).setValue(newTravel)
                                 .addOnSuccessListener {
-                                    Toast.makeText(applicationContext, "Event added and awaiting for verification", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(applicationContext, "Travel added and awaiting for verification", Toast.LENGTH_LONG).show()
+
                                 }
                                 .addOnFailureListener {
                                     Toast.makeText(applicationContext, it.message.toString(), Toast.LENGTH_LONG)

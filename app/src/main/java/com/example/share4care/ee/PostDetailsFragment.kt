@@ -190,8 +190,4 @@ class PostDetailsFragment : Fragment() {
             iv.clearColorFilter()
         },250)
     }
-
-    fun loadPostDetails(){
-
-    }
 }

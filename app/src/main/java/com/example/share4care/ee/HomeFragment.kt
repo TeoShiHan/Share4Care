@@ -9,6 +9,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -22,16 +24,20 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.share4care.*
 import com.example.share4care.R
 import com.example.share4care.contentData.*
 import com.example.share4care.databinding.FragmentHomeBinding
+import com.example.share4care.shihan.roomData.*
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -46,8 +52,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.template.androidtemplate.ui.main.EventRecyclerViewAdapter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -67,6 +71,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var mBottomSheetBehaviour: BottomSheetBehavior<ConstraintLayout>
     private lateinit var recyclerViewLayoutManager: LinearLayoutManager
     private lateinit var username : String
+    // for saving the data to local database
+    private lateinit var traveldb : TravelViewModel
+    private lateinit var eventdb : EventViewModel
+    private lateinit var servicedb : ServiceViewModel
+    val roomCaster = TypeCaster()
 
     val database = Firebase.database
     val myEventRef = database.getReference("Events")
@@ -164,6 +173,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val status = arguments?.getString("status")
         username = arguments?.getString("username")!!
 
+
+        // Initialize the room db
+        // initialize room db
+        eventdb = ViewModelProvider(this)[EventViewModel::class.java]
+        servicedb = ViewModelProvider(this)[ServiceViewModel::class.java]
+        traveldb = ViewModelProvider(this)[TravelViewModel::class.java]
+
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+
         if (status!! =="0"){
             binding.addButton.visibility = View.GONE
         }
@@ -187,33 +205,62 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         binding.recyclerView.layoutManager = recyclerViewLayoutManager
         binding.recyclerView.setHasFixedSize(true)
 
-        listEST = arrayListOf()
+        if(isConnectedToWifi()){
+            loadEvent(object:EventCallback{
+                override fun onEventBack(s: MutableList<Event>) {
+                    listEvent = s
+                    listEST.addAll(listEvent)
+                }
+            }, 1)
 
-        loadEvent(object:EventCallback{
-            override fun onEventBack(s: MutableList<Event>) {
-                listEvent = s
-                listEST.addAll(listEvent)
-                Log.d("fetchEvent","yes")
-            }
-        }, 1)
+            loadService(object:ServiceCallback{
+                override fun onServiceBack(s: MutableList<Service>) {
+                    listService = s
+                    listEST.addAll(listService)
+                }
+            }, 1)
 
-        loadService(object:ServiceCallback{
-            override fun onServiceBack(s: MutableList<Service>) {
-                listService = s
-                listEST.addAll(listService)
-                Log.d("fetchService","yes")
-            }
-        }, 1)
+            loadTravel(object:TravelCallback{
+                override fun onTravelBack(s: MutableList<Travel>) {
+                    listTravel = s
+                    listEST.addAll(listTravel)
+                    eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
+                    binding.recyclerView.adapter = eventRecyclerViewAdapter
+                }
+            }, 1)
+        }
+        else{
+            Toast.makeText(activity, "applying local data", Toast.LENGTH_SHORT).show()
 
-        loadTravel(object:TravelCallback{
-            override fun onTravelBack(s: MutableList<Travel>) {
-                listTravel = s
-                listEST.addAll(listTravel)
-                eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
-                binding.recyclerView.adapter = eventRecyclerViewAdapter
-                Log.d("fetchTravel","yes")
-            }
-        }, 1)
+            eventdb.readAllData.observe(viewLifecycleOwner, {
+                    returnedValue ->
+                val convertedData = roomCaster.convertEventDataListToRuntimeList(returnedValue)
+                if (convertedData != null) {
+                    listEvent = convertedData
+                    listEST.addAll(convertedData)
+                }
+            })
+
+            servicedb.readAllData.observe(viewLifecycleOwner,{
+                    returnedValue ->
+                val convertedData = roomCaster.convertServiceDataListToRuntimeList(returnedValue)
+                if (convertedData != null) {
+                    listService = convertedData
+                    listEST.addAll(convertedData)
+                }
+            })
+
+            traveldb.readAllData.observe(viewLifecycleOwner, {
+                    returnValue->
+                val convertedData = roomCaster.convertTravelDataListToRuntimeList(returnValue)
+                if (convertedData != null) {
+                    listTravel = convertedData
+                    listEST.addAll(convertedData)
+                    eventRecyclerViewAdapter = EventRecyclerViewAdapter(ArrayList(listEST),this@HomeFragment)
+                    binding.recyclerView.adapter = eventRecyclerViewAdapter
+                }
+            })
+        }
 
         binding.addButton.setOnClickListener(){
             val typeFormView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_choose_type, null)
@@ -458,8 +505,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 if (p0.exists()) {
                     for (c in p0.children) {
                         if ((c.child("status").value as Long).toInt() == key){
-                            Log.d("load title",c.child("title").toString())
-                            Log.d("load likes",c.child("like").toString())
                             val title =  c.child("title").value.toString()
                             val host =  c.child("host").value.toString()
                             val category =  c.child("category").value.toString()
@@ -477,7 +522,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                             val save = if(c.child("save").exists()) c.child("save").value as HashMap<*,*> else hashMapOf<String,String>()
                             val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                            list.add(Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status, likes, dislikes, save, comment))
+                            val tempEvent = Event(title, host, category, description, date, address, latitude , longtitude, contactNumber, contactEmail, image, status, likes, dislikes, save, comment)
+
+                            list.add(tempEvent)
+
+                            val tempRoomEvent = roomCaster.getEventData(tempEvent)
+
+                            eventdb.addEvent(tempRoomEvent)
                         }
                     }
 //                    Log.d("log event list", list.toString())
@@ -498,6 +549,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 if (p0.exists()) {
                     for (c in p0.children) {
                         if ((c.child("status").value as Long).toInt() == key){
+
                             val title =  c.child("title").value.toString()
                             val host =  c.child("host").value.toString()
                             val category =  c.child("category").value.toString()
@@ -514,7 +566,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                             val save = if(c.child("save").exists()) c.child("save").value as HashMap<*,*> else hashMapOf<String,String>()
                             val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                            list.add(Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, likes, dislikes, save, comment))
+                            val tempService = Service(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, likes, dislikes, save, comment)
+
+                            list.add(tempService)
+
+                            val tempRoomService = roomCaster.getServiceData(tempService)
+                            servicedb.addService(tempRoomService)
                         }
                     }
                     callback.onServiceBack(list)
@@ -534,6 +591,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 if (p0.exists()) {
                     for (c in p0.children) {
                         if ((c.child("status").value as Long).toInt() == key){
+
                             val title =  c.child("title").value.toString()
                             val host =  c.child("host").value.toString()
                             val category =  c.child("category").value.toString()
@@ -550,8 +608,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                             val save = if(c.child("save").exists()) c.child("save").value as HashMap<*,*> else hashMapOf<String,String>()
                             val comment = if(c.child("comment").exists()) c.child("comment").value as MutableList<UserComment> else mutableListOf()
 
-                            list.add(Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, likes, dislikes, save, comment))
+                            val tempTravel = Travel(title, host, category, description, address, latitude , longtitude, contactNumber, contactEmail, image, status, likes, dislikes, save, comment)
 
+                            list.add(tempTravel)
+
+                            val tempRoomTravel = roomCaster.getTravelData(tempTravel)
+
+                            traveldb.addTravel(tempRoomTravel)
                         }
                     }
                     callback.onTravelBack(list)
@@ -601,5 +664,35 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         const val EVENT = "com.example.share4care.EVENT"
         const val SERVICE = "com.example.share4care.SERVICE"
         const val TRAVEL = "com.example.share4care.TRAVEL"
+    }
+
+//    fun isConnectedToWifi(): Boolean {
+//        val context = activity?.applicationContext
+//        val connectivity: ConnectivityManager? = null
+//        var info: NetworkInfo? = null
+//
+//        val networkManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE)
+//        val isConnectedWifi = connectivity?.activeNetworkInfo
+//
+//        if (isConnectedWifi != null && isConnectedWifi.state == NetworkInfo.State.CONNECTED){
+//            return true
+//        }else{
+//            Toast.makeText(context, "wifi not turned on, showing local data", Toast.LENGTH_SHORT).show()
+//            return false
+//        }
+//    }
+
+    private fun isConnectedToWifi(): Boolean {
+        val connManager = activity?.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+
+        if (mWifi!!.isConnected) {
+            // Do whatever
+            return true
+        }
+        else{
+            Toast.makeText(activity, "wifi not connected", Toast.LENGTH_SHORT).show()
+            return false
+        }
     }
 }

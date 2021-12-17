@@ -30,8 +30,6 @@ class RegPersonalInfo : Fragment() {
         // Variables
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reg_personal_info, container, false)
 
-        val view = inflater.inflate(R.layout.fragment_reg_personal_info, container, false)
-
         val datePicker = getDatePicker()
 
         val fragmentManager = activity?.supportFragmentManager
@@ -148,7 +146,7 @@ class RegPersonalInfo : Fragment() {
             addressFieldContainer.error = null
         }
 
-        val containPostCodePattern = ".*\\d{5}".toRegex()
+        val containPostCodePattern = ".*\\d{5}.*".toRegex()
 
         if (!containPostCodePattern.matches(addressField.text.toString())){
             addressFieldContainer.error = "Please enter a valid address"
